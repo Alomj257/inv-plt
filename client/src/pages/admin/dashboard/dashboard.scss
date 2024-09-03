@@ -1,0 +1,11 @@
+@import "../../../styles/variable";
+
+.admin-dashboard{
+    padding: 10px;
+    border: 1px solid $border-line;
+
+    button{
+        height: 50px;
+        aspect-ratio: 1/1;
+    }
+}

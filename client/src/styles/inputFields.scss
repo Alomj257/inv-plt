@@ -1,0 +1,15 @@
+@import "./variable";
+
+.field{
+    label{
+        font-size: 18px;
+    }
+.input-field{
+    background: $input;
+    padding:  15px 20px;
+    width: 100%;
+    border-radius: 25px;
+    border: none;
+}
+
+}
