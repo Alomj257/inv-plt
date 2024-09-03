@@ -1,5 +1,5 @@
-const Connection = require("./Config/DBConnect");
-const app = require("./Config/expressConfig");
+const Connection = require("./config/dBConnect");
+const app = require("./config/expressConfig");
 const http = require("http");
 const PORT = process.env.PORT || 8000;
 Connection();
