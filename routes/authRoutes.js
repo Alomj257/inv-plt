@@ -10,7 +10,7 @@ const {
   setPassword,
   getAllUserByRoles,
   deleteUser,
-} = require("../controller/AuthController");
+} = require("../controller/authController");
 
 const AuthRoutes = require("express").Router();
 AuthRoutes.post("/register", register);
