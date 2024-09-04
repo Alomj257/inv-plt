@@ -28,10 +28,10 @@ exports.MemberMessage = (member) => {
     <h3>Login Link</h3>
     <p>You can log in using the following link:</p>
    <button style="background-color: #007bff; border: none; padding: 10px 20px; border-radius: 25px;">
-  <a style="color: #ffffff; text-decoration: none; font-weight: bold;" href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer">Login Here</a>
+  <a style="color: #ffffff; text-decoration: none; font-weight: bold;" href="https://inv-plt-j2i7.onrender.com/login" target="_blank" rel="noopener noreferrer">Login Here</a>
 </button>
-br
-    <a style="color:"#0000FF" href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer">http://localhost:5173/login</a>
+<br>
+    <a style="color:"#0000FF" href="https://inv-plt-j2i7.onrender.com/login" target="_blank" rel="noopener noreferrer">https://inv-plt-j2i7.onrender.com/login</a>
 
     <p>Thank you for joining us, and we look forward to working together!</p>
     <p>If any of the above information is incorrect, please let us know as soon as possible.</p>
