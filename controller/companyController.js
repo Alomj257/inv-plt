@@ -22,6 +22,7 @@ exports.createCompany=async(req,res)=>{
           if(req.body.investDoc){
           req.body.investDoc=JSON.parse(req.body.investDoc);
           }
+       
         const company=await Company.findById(req.body.creatorId);
         if(company){
             return res.status(403).json({message:'This Company already added '});
@@ -51,6 +52,14 @@ exports.updateCompany=async(req,res)=>{
           }
           if(req.body.investDoc){
           req.body.investDoc=JSON.parse(req.body.investDoc);
+          }
+          if (req.files) {
+            if (req.files.cover && req.files.cover[0]) {
+                req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
+              }
+              if (req.files.profile && req.files.profile[0]) {
+                req.body.profile = "/company/profile/" + req.files.profile[0].originalname;
+              }
           }
         await Company.findByIdAndUpdate(req.params.id,req.body,{new:true});
         res.status(200).json("Company update Successfully");

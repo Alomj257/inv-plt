@@ -10,42 +10,37 @@ exports.message=(otp)=>{
 
 exports.MemberMessage = (member) => {
   return `
-    <h2>New Member Registration</h2>
-    <p>A new member has registered. Here are the details:</p>
-
-    <h3>Personal Information</h3>
-    <ul>
-      <li><strong>First Name:</strong> ${member.personal.firstName}</li>
-      <li><strong>username:</strong> ${member.account.email}</li>
-      <li><strong>Password:</strong> ${member.account.password}</li>
-      <li><strong>Last Name:</strong> ${member.personal.lastName}</li>
-      <li><strong>City:</strong> ${member.personal.city || "Not Provided"}</li>
-      <li><strong>Date of Birth:</strong> ${member.personal.dob || "Not Provided"}</li>
-      <li><strong>Company:</strong> ${member.personal.company || "Not Provided"}</li>
-      <li><strong>Industry:</strong> ${member.personal.industry || "Not Provided"}</li>
-    </ul>
-    <h3>Login Link</h3>
-    <a href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer">http://localhost:5173/login</a>
-    <h3>Investment Information</h3>
-    <ul>
-      <li><strong>Interested to Invest:</strong> ${member.investmentInfo.interestedToInvest || "Not Provided"}</li>
-      <li><strong>Sectors:</strong> ${member.investmentInfo.sectors.join(", ") || "Not Provided"}</li>
-      <li><strong>Region:</strong> ${member.investmentInfo.region || "Not Provided"}</li>
-      <li><strong>Investor Type:</strong> ${member.investmentInfo.investorType || "Not Provided"}</li>
-      <li><strong>Expertise:</strong> ${member.investmentInfo.expertise || "Not Provided"}</li>
-      <li><strong>Passions:</strong> ${member.investmentInfo.passions || "Not Provided"}</li>
-      <li><strong>Anyma:</strong> ${member.investmentInfo.anyma.join(", ") || "Not Provided"}</li>
-    </ul>
+    <h2>Welcome to Our Platform!</h2>
+    <p>Thank you for registering. Below are your login credentials and company details:</p>
 
     <h3>Account Information</h3>
     <ul>
       <li><strong>Email:</strong> ${member.account.email}</li>
-      <li><strong>Phone:</strong> ${member.account.phone}</li>
-      <li><strong>Role:</strong> ${member.account.role}</li>
-      <li><strong>Agreement Accepted:</strong> ${member.account.agreement ? "Yes" : "No"}</li>
+      <li><strong> Password:</strong> ${member.account.password}</li>
     </ul>
+
+    <h3>Company Details</h3>
+    <ul>
+      <li><strong>Company:</strong> ${member.personal.company || "Not Provided"}</li>
+      <li><strong>Industry:</strong> ${member.personal.industry || "Not Provided"}</li>
+    </ul>
+
+    <h3>Login Link</h3>
+    <p>You can log in using the following link:</p>
+   <button style="background-color: #007bff; border: none; padding: 10px 20px; border-radius: 25px;">
+  <a style="color: #ffffff; text-decoration: none; font-weight: bold;" href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer">Login Here</a>
+</button>
+br
+    <a style="color:"#0000FF" href="http://localhost:5173/login" target="_blank" rel="noopener noreferrer">http://localhost:5173/login</a>
+
+    <p>Thank you for joining us, and we look forward to working together!</p>
+    <p>If any of the above information is incorrect, please let us know as soon as possible.</p>
+      
+      <p>Best regards,</p>
+      <p>Anyma</p>
   `;
 };
+
 
 
 exports.MemberMessageFromAdmin = (user) => {

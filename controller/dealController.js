@@ -87,3 +87,25 @@ exports.getAllBycompanyIdDeal=async(req,res)=>{
         res.status(500).json({messsage:"something went wrong!"});
     }
 }
+
+exports.getAllDealsWithUserIdAndCompany=async(req,res)=>{
+    try {
+        const {investorId}=req.params;
+        const deals = await Deal.aggregate([
+            { 
+                $match: {  "investors.investerId": investorId }
+            },
+            { 
+                $group: { 
+                    _id: "$companyId", 
+                    deals: { $push: "$$ROOT" } 
+                } 
+            }
+        ]);
+        res.status(200).json(deals);
+        
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({messsage:"something went wrong!"});
+    }
+}

@@ -4,18 +4,12 @@ const { sendEmail } = require("../middlewares/sendEmail");
 const { message, MemberMessage } = require("../helper/emailMessage");
 const { OtpGenerator } = require("../helper/otpGenrator");
 const bcrypt = require("bcryptjs");
-const Company = require("../model/company");
-const Industry = require("../model/library.options/industry");
 
 
 const register = async (req, res) => {
   try {
     if (!req.body.account || !req.body.account.email) {
       return res.status(400).json({ message: "Email is required." });
-    }
-    const company=await Company.findOne({name:req.body.personal.company});
-    if(!company){
-      return res.status(404).json({ message: "This company not exist" });
     }
 
     const { email, password, cnfPassword } = req.body.account;
@@ -31,12 +25,8 @@ const register = async (req, res) => {
       return res.status(401).json({ message: "Passwords do not match." });
     }
 
-    const existIdus=await Industry.findOne({name:req.body.personal.industry});
-    if(!existIdus&&req.body.personal.industry){
-      await new Industry({name:req.body.personal.industry}).save();
-    }
     const newUser = new User(req.body);
-    await sendEmail(MemberMessage(newUser),email,"New member added");
+    await sendEmail(MemberMessage(newUser),email,"Congratultions, Your account has been created by Anyma");
     await newUser.save();
     res.status(201).json( "Your account is successfully created." );
   } catch (error) {
@@ -54,13 +44,6 @@ const login = async (req, res) => {
         .status(404)
         .json({ message: "Your account does not exist. Please sign up." });
     }
-    
-    // if (!user?.account?.isEnable) {
-    //   return res
-    //     .status(404)
-    //     .json({ message: "sorry!, Admin is not validate you" });
-    // }
-    
 
     const isMatched = await user.comparePassword(req.body.password);
     if (!isMatched) {
@@ -221,7 +204,7 @@ const setPassword=async(req,res)=>{
 
 const getAllUserByRoles=async(req,res)=>{
   try {
-    const users=await User.find({'account.role':req.params.role,'account.isEnable':true});
+    const users=await User.find({'account.role':req.params.role});
     res.status(200).json(users);
   } catch (error) {
     console.log(error);
