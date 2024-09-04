@@ -6,22 +6,26 @@ import moic from "../../../assets/all-img/distribution-of-wealth.png"
 import profit from "../../../assets/all-img/increase.png"
 import irr from "../../../assets/all-img/return-on-investment.png"
 import DealListpop from '../../../components/customer/dealPop'
-import { getAllCompanyService } from '../../../service/company/companyService'
-import { getByCompanyIdDealService } from '../../../service/deal/dealService'
+import {  getByIdCompanyService } from '../../../service/company/companyService'
+import { getAllDealByUserAndCompanyService } from '../../../service/deal/dealService'
+import { Server } from '../../../service/axios'
+import { getAuth } from '../../../utils/authenticationHelper'
 const Portfolio = () => {
-  const [isDealList,setisDealList]=useState(false);
   const [company,setCompany]=useState([]);
-  
+  const userId=getAuth().user?._id;
+
   useEffect(()=>{
     const getCompany=async()=>{
-      const data=await getAllCompanyService();
+      const data=await getAllDealByUserAndCompanyService(userId);
       setCompany(data);
     }
     getCompany();
-  },[])
+  },[userId])
+  console.log()
 
   return (
     <>
+    {/* overview */}
       <div className="">
         <div className="container w-100 pe-0">
           <div className="row">
@@ -42,7 +46,7 @@ const Portfolio = () => {
         </div>
       </div>
 
-
+{/* investment */}
       <div className="h-50">
         <div className="my-3">
             <div className="bg-dark py-4 px-5 rounded d-flex justify-content-between">
@@ -50,12 +54,12 @@ const Portfolio = () => {
             </div>
         </div>
         <div className="bg-white h-50">
-        <table class="table">
-          <thead class="thead-dark">
+        <table className="table">
+          <thead className="thead-dark">
             <tr>
               <th scope="col text-uppercase "> </th>
               <th scope="col text-uppercase "> COMPANY</th>
-              <th scope="col text-uppercase ">Asset CLASS</th>
+              <th scope="col text-uppercase ">Asset className</th>
               <th scope="col text-uppercase ">Net Profit(Loss)</th>
               <th scope="col text-uppercase ">SECTOR</th>
               <th scope="col text-uppercase ">NET MOIC</th>
@@ -65,48 +69,18 @@ const Portfolio = () => {
             </tr>
           </thead>
           <tbody>
-            {company.length>0&&company?.map((val, key) => (
-              <tr key={key} className="p-3 ">
-                <td>
-                  <img src={val?.img} alt="" />
-                </td>
-                <td>{val?.name}</td>
-                <td>{val?.dealSummary?.asset}</td>
-                <td>{val?.dealSummary?.profitLoss}</td>
-                <td>{val?.dealSummary?.sector}</td>
-                <td>{val?.moic}</td>
-                <td>{val?.totalInvet}</td>
-                <td>{val?.irr}</td>
-                <td className="d-flex gap-3">
-                
-               <button onClick={()=>setisDealList(true)} className="btn-red"><Investment id={val?._id}/> Investments</button>
-                </td>
-              </tr>
+            {company&&company.length>0&&company?.map((val, key) => (
+              <Company index={key} companyId={val?._id} deals={val?.deals}/>
             ))}
           </tbody>
         </table>
       </div>
       </div>
-    {isDealList&&<DealListpop setIsNew={setisDealList} />}
     </>
   )
 }
 
 export default Portfolio
-
-const Investment=({id})=>{
-  
-  const [deals,setDeals]=useState(false);
-  useEffect(()=>{
-    const getDeal=async()=>{
-      const data=await getByCompanyIdDealService(id);
-      setDeals(data);
-    }
-    getDeal();
-  },[id]);
-  return <>{deals?.length}</>
-}
-
 
 const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:"6",icon:invest},
@@ -117,11 +91,38 @@ const fieldData = [
    {name:"  NET IRR",qty:" 90%",icon:irr},
   ];
   
+const Company = ({ companyId, index, deals }) => {
+  const [company, setCompany] = useState(null);
+  const [isDealList, setisDealList] = useState(false);
+
+  useEffect(() => {
+    const getCompanyById = async () => {
+      const data = await getByIdCompanyService(companyId);
+      setCompany(data);
+    };
+    getCompanyById();
+  }, [company]);
+  return (
+    <>
+      <tr key={index} className="p-3 ">
+        <td>
+        <div className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
+        </td>
+        <td className='text-capitalize'>{company?.name}</td>
+        <td>{company?.dealSummary?.asset}</td>
+        <td>{company?.dealSummary?.profitLoss}</td>
+        <td>{company?.dealSummary?.sector}</td>
+        <td>{company?.moic}</td>
+        <td>{company?.totalInvet}</td>
+        <td>{company?.irr}</td>
+        <td className="d-flex gap-3">
+          <button onClick={() => setisDealList(true)} className="btn-red">
+            {deals && deals?.length} Investments
+          </button>
+        </td>
+      </tr>
+      {isDealList && <DealListpop company={company} deals={deals} setIsNew={setisDealList} />}
+    </>
+  );
+};
   
-  const data=[
-    {img:"",name:"spaceX",asset:"Equity",profit:"0.7%",sector:"Space exploration",moic:"$ 2,30,00,000",totalInvet:"$ 2,30,00,000",irr:"0.7%"},
-    {img:"",name:"spaceX",asset:"Equity",profit:"0.7%",sector:"Space exploration",moic:"$ 2,30,00,000",totalInvet:"$ 2,30,00,000",irr:"0.7%"},
-    {img:"",name:"spaceX",asset:"Equity",profit:"0.7%",sector:"Space exploration",moic:"$ 2,30,00,000",totalInvet:"$ 2,30,00,000",irr:"0.7%"},
-    {img:"",name:"spaceX",asset:"Equity",profit:"0.7%",sector:"Space exploration",moic:"$ 2,30,00,000",totalInvet:"$ 2,30,00,000",irr:"0.7%"},
-    {img:"",name:"spaceX",asset:"Equity",profit:"0.7%",sector:"Space exploration",moic:"$ 2,30,00,000",totalInvet:"$ 2,30,00,000",irr:"0.7%"},
-  ]

@@ -21,8 +21,8 @@ const Companies = () => {
   },[]);
   return (
     <div className="bg-white company h-100 ">
-    <table class="table">
-      <thead class="thead-dark">
+    <table className="table">
+      <thead className="thead-dark">
         <tr>
           <th scope="col">Logo</th>
           <th scope="col">Name</th>

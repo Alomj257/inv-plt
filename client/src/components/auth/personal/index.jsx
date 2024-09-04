@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getAllCompanyService, getAllIndustryService } from "../../../service/options/optionsService";
 
 const Personal = ({setPersonal}) => {
-  const [newIndus,setNewIndus]=useState('');
-  const [industries,setIndustries]=useState([]);
-  const [companies,setCompanies]=useState([]);
   const [industry,setIndustry]=useState('');
   
   const handleChange=(e)=>{
@@ -16,41 +12,9 @@ const Personal = ({setPersonal}) => {
     setPersonal(pre=>({...pre,[name]:value}))
     }
   }
-  useEffect(()=>{
-    const getIndus=async()=>{
-          const data=await getAllIndustryService();
-          setIndustries(data);
-    }
-    getIndus();
-  },[]);
+  
 
-  useEffect(()=>{
-    const getCompany=async()=>{
-        const data=await getAllCompanyService();
-        setCompanies(data);
-    }
-    getCompany();
-  },[]);
 
-const fieldData = [
-  { place: "Thomas", type: "input", name: "firstName", label: "First name" },
-  { place: "Domingue", type: "input", name: "lastName", label: "Last name" },
-  {
-    place: "Paris, France",
-    type: "input",
-    name: "city",
-    label: "City of residence",
-  },
-  { place: " 10-05-1993", type: "date", name: "dob", label: "Date Of birth" },
-  { place: "Blue Nest", type: "select", name: "company", label: "Company name",option:companies },
-  {
-    place: " Tech and E-commerce ",
-    type: "select",
-    name: "industry",
-    label: " Industry",
-    option: industries,
-  },
-];
 
   return (<>
     <div className="row row-cols-md-2">
@@ -84,20 +48,29 @@ const fieldData = [
         </div>
       ))}
     </div>
-      {industry==="Other"&&
-           <div className="px-0 mb-4  d-flex flex-column gap-2 field">
-      <input
-           type="text"
-           name="industry"
-           onChange={handleChange}
-           placeholder="Select Industry"
-           className="input-field text-white"
-         />
-         </div>
-}
     </>
   );
 };
 
 export default Personal;
 
+
+
+const fieldData = [
+  { place: "Thomas", type: "input", name: "firstName", label: "First name" },
+  { place: "Domingue", type: "input", name: "lastName", label: "Last name" },
+  {
+    place: "Paris, France",
+    type: "input",
+    name: "city",
+    label: "City of residence",
+  },
+  { place: " 10-05-1993", type: "date", name: "dob", label: "Date Of birth" },
+  { place: "Blue Nest", type: "input", name: "company", label: "Company name" },
+  {
+    place: " Tech and E-commerce ",
+    type: "input",
+    name: "industry",
+    label: " Industry",
+  },
+];

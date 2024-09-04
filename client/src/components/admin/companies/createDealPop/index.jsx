@@ -85,8 +85,8 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                   <label htmlFor={`name-${index}`}>Select Investors</label>
                   <div className="input-field w-100">
                     <select
-                      name="name"
-                      value={field.name}
+                      name="investerId"
+                      value={field.investerId}
                       onChange={(event) => handleChange(index, event)}
                       style={{ outline: "none" }}
                       className="border-0 bg-transparent w-100"

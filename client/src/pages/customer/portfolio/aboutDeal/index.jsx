@@ -1,10 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./aboutDeal.scss"
 import img from "../../../../assets/all-img/Logo-02.jpg"
 import pro from "../../../../assets/profile/comment_2.png"
 import { FaRegFileLines } from 'react-icons/fa6'
+import { useLocation } from 'react-router-dom'
+import { getByIdCompanyService } from '../../../../service/company/companyService'
+import { Server } from '../../../../service/axios'
+import { formatTimeFromNow } from '../../../../utils/formater/dateTimeFormater'
 
 const AboutDeal = () => {
+    const {state}=useLocation();
+    const [company,setCompany]=useState(null);
+
+    useEffect(()=>{
+        const getCompanyById=async()=>{
+            const data=await getByIdCompanyService(state);
+            setCompany(data);
+        }
+        getCompanyById();
+    },[state]);
+
+    console.log(company)
+
     return (
       <div className='new-company'>
        <div className="container">
@@ -12,20 +29,20 @@ const AboutDeal = () => {
               <div className="col-9 ps-0">
                   <div>
                       <div className='cover-profile d-flex flex-column'>
-                          <img src={img} className='position-absolute rounded-3 inset-0 w-100 h-100' alt="cover" />
+                          <img src={Server+company?.cover||img} className='position-absolute rounded-3 inset-0 w-100 h-100' alt="cover" />
                         
                           <div className="mt-auto">
                           <div className="profile  ">
-                              <img src={pro} className='position-absolute w-100 h-100' style={{inset:"0"}} alt="" />
+                              <img src={Server+company?.profile||pro} className='position-absolute rounded-circle w-100 h-100' style={{inset:"0"}} alt="" />
                           </div>
                           </div>
                       </div>
   
                       <div className="about col-md-8 d-flex bg-dark text-white my-3 py-2 border border-2 rounded px-3 justify-content-between align-items-center">
-                          <div className='fw-semibold'>ABOUT SPACEX</div>
+                          <div className='fw-semibold text-uppercase'>ABOUT {company?.name}</div>
                       </div>
                       <div className='border p-2 rounded bg-white'>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore unde eligendi praesentium cum dolorum maiores accusantium laborum? In placeat porro doloremque reprehenderit est quibusdam iusto voluptatum itaque molestias? Possimus facilis laborum ipsum natus repudiandae mollitia et. Corrupti, expedita dolor! Quod facilis et magni aliquam recusandae quis perferendis dignissimos voluptate? Magni doloribus veniam iste ea! Dolorum quisquam ex tenetur. Mollitia, beatae. Beatae laudantium dolor sunt qui reprehenderit aliquam asperiores atque ipsam, fuga, non saepe, hic dolorum! Necessitatibus, animi repellat. Explicabo, asperiores cupiditate. Pariatur quos ad iure facere consequuntur vero, nemo officia et dolor nulla eum, expedita magnam fugit dolorum repellat vel?</p>
+                        <p>{company?.about}</p>
                       </div>
                   </div>
               </div>
@@ -37,7 +54,7 @@ const AboutDeal = () => {
                       <div className="deal-list px-4 h-100 py-4 pb-5 rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
                          {data?.map((val,index)=>( <div  key={index}>
                               <label htmlFor="" className='text-muted'>{val?.name}</label>
-                              <div>-</div>
+                              <div className='fw-bold'>{company?.dealSummary&&company?.dealSummary[val?.field]}</div>
                           </div>))}
                       </div>
                   </div>
@@ -50,9 +67,9 @@ const AboutDeal = () => {
                           <div className='fw-semibold'>Latest News</div>
                       </div>
                       <div className="details bg-white rounded d-flex flex-column gap-3 p-3">
-                        {Array.from({length:5}).map((_,i)=>(
-                        <div className='d-flex  flex-column gap-2' key={i}>  <a href="http://google.com" className='text-dark' target="_blank" rel="noopener noreferrer"> SpaceX launches 23 Starlink satellites from Florida</a>
-                        <small className='text-muted tracking-normal'>2 days ago</small>
+                        {company?.news&&company?.news.map((val,i)=>(
+                        <div className='d-flex  flex-column gap-2' key={i}>  <div className="d-flex justify-content-between"><a href={val?.link} className='text-dark' target="_blank" rel="noopener noreferrer"> {val?.name}</a></div>
+                       <small className='text-muted tracking-normal'>{formatTimeFromNow(val?.date)}</small>
                         </div>
                         ))}
   
@@ -64,13 +81,13 @@ const AboutDeal = () => {
                           <div className='fw-semibold'>UPDATE</div>
                       </div>
                       <div className="details bg-white rounded d-flex flex-column gap-3 py-3 ">
-                      {Array.from({length:5}).map((_,i)=>(
-                                    <div className="d-flex  mx-2 ms-3 gap-2">
-                                        <div><FaRegFileLines className='text-muted' size={25}/></div> <div className="d-flex flex-column gap-1">
-                                            <small className='text-muted'> CONTRACT UPDATE</small>
-                                            <small className='fw-bold'>{new Date().toLocaleDateString()}</small>
-                                        </div>
-                                    </div>
+                      {company?.update&&company?.update.map((val,i)=>(
+                                   <div key={i} className="d-flex  mx-2 ms-3 gap-2">
+                                   <div><FaRegFileLines className='text-muted' size={20}/></div> <div className="d-flex flex-column gap-1">
+                                       <small className='text-muted'> CONTRACT UPDATE</small>
+                                       <small className='fw-bold'>{val?.date}</small>
+                                   </div>
+                               </div>
                       ))}
                       </div></div>
                   </div>
@@ -80,13 +97,13 @@ const AboutDeal = () => {
                           </div>
                       </div>
                       <div className="details bg-white rounded d-flex flex-column gap-3 py-3">
-                      {Array.from({length:5}).map((_,i)=>(
-                                    <div className="d-flex  mx-2 ms-3 gap-2">
-                                        <div><FaRegFileLines className='text-muted' size={25}/></div> <div className="d-flex flex-column gap-1">
-                                            <small className='text-muted'> CONTRACT UPDATE</small>
-                                            <small className='fw-bold'>{new Date().toLocaleDateString()}</small>
-                                        </div>
-                                    </div>
+                      {company?.update&&company?.update.map((val,i)=>(
+                                     <div key={i} className="d-flex  mx-2 ms-3 gap-2">
+                                     <div><FaRegFileLines className='text-muted' size={25}/></div> <div className="d-flex flex-column gap-1">
+                                         <small className='text-muted'> CONTRACT UPDATE</small>
+                                         <small className='fw-bold'>{val?.date}</small>
+                                     </div>
+                                 </div>
                       ))}
   
                       </div></div>
@@ -100,11 +117,10 @@ const AboutDeal = () => {
 
 export default AboutDeal;
 
-
 const data=[
-    {name:"ASSET CLASS"},
-    {name:"NVESTMENT DATE"},
-    {name:"CUMULATED INVESTMENTS"},
-    {name:"CURRENT VALUATION"},
-    {name:"TOTAL PROFIT (LOSS)"},
+    {name:"ASSET className",field:'asset'},
+    {name:"NVESTMENT DATE",field:'investDate'},
+    {name:"CUMULATED INVESTMENTS",field:'cumulatedInvest'},
+    {name:"CURRENT VALUATION",field:"currentValuation"},
+    {name:"TOTAL PROFIT (LOSS)",field:'profitLoss'},
 ]

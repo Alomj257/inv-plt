@@ -4,6 +4,7 @@
     grid-template-columns: 1.6fr 2fr;
     height: 100vh;
     width: 100vw;
+    z-index: 1;
     @media (max-width:1200px) {
         grid-template-columns: 0.8fr 2fr;
     }

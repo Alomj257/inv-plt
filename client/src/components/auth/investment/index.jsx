@@ -60,7 +60,7 @@ const fieldChange=(e)=>{
                     </div>
                   ))}
                 </div>
-               : <div className="areas">
+               : <div className="areas d-flex flex-column gap-3">
                   <div className="field">
                   <label htmlFor="">What would you consider to be your field of expertise ?</label>
                   <textarea  onChange={fieldChange} rows={4} className="input-field"  placeholder="Write Here" name="expertise" id=""></textarea>

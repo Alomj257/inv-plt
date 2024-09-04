@@ -6,7 +6,7 @@ const AddNewsPop = ({setIsNew,setNews}) => {
     const [val,setVal]=useState(null);
     const handleChange=(e)=>{
         const {value,name}=e.target;
-        setVal({...val,[name]:value});
+        setVal({...val,[name]:name==="date"?new Date(new Date(value).setHours(new Date().getHours(), new Date().getMinutes(), new Date().getSeconds())).toISOString():value});
     }
 
     const handleAdd=()=>{

@@ -1,10 +1,11 @@
 import { Navigate } from "react-router-dom";
+import { getAuth } from "../utils/authenticationHelper";
 
 const PrivateRoute = ({ children }) => {
 
-    const isAuthenticated=true;
+    const isAuthenticated=getAuth()?.token;
   if (!isAuthenticated) {
-    return <Navigate to="/admin/auth/login" />;
+    return <Navigate to="/" />;
   }
 
   return <>{children}</>;

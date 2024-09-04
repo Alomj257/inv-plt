@@ -9,6 +9,8 @@ import { registerService } from "../../service/auth/AuthService";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { showToast } from "../../utils/toasters";
 import { useNavigate } from "react-router-dom";
+import Success from "../../components/auth/success";
+import AgreementPop from "../../components/auth/agreement";
 
 const Register = () => {
   const [step, setStep] = useState(0);
@@ -17,6 +19,7 @@ const Register = () => {
   const [personal, setPersonal] = useState(null);
   const [account, setAccount] = useState(null);
   const [investVal, setInvestVal] = useState(null);
+  const [isPop,setIspop]=useState(false);
 
   const comps = [
     { com: <Personal setPersonal={setPersonal} /> },
@@ -34,6 +37,10 @@ const Register = () => {
   ];
 
   const handleStep = () => {
+    if(step===comps.length - 1&&!account.agreement){
+      setIspop(true);
+      return;
+    }
     if (step == comps.length - 1) {
       handleSubmit();
       return;
@@ -56,23 +63,26 @@ const Register = () => {
       account: account,
     };
     if(data?.account&&data?.investmentInfo&&data?.account){
-   const data=await     registerService(data)
-   if(data){
-    naviagte("/login");
-   }
+       await     registerService(data);
+        setStep(step+1);
     }else{
         showToast("error","field Required")
     }
   };
 
+
+
+
   return (
     <div>
+  {isPop&& <AgreementPop setIsNew={setIspop} setAccount={setAccount} />}
       <div className="register">
         <div className="register-left">
           <img src={img} className="w-100 h-100" alt="" />
         </div>
         <div className="register-right d-flex flex-column">
-          <div className="row">
+          {step===comps.length? <Success  />:<>
+                    <div className="row">
             <div className="col-10 ps-0 ms-auto d-flex justify-content-between align-items-center">
               <h5 className="semibol">
                 Get reporting, access to new deals. <br />
@@ -106,11 +116,13 @@ const Register = () => {
           </div>
           <div className="col-md-10 mx-auto pb-3 mt-auto">
             <div className="col-md-10 mx-auto pe-0">
-              <button disabled={!personal} onClick={handleStep} className={`btn-${!personal&&"dark"}-gray d-flex  py-2 rounded-5 w-100`}>
-              <span className="mx-auto">  Next</span> <span className="text-dark pe-3"><IoIosArrowRoundForward size={30}/></span>
+              <button disabled={!personal} onClick={handleStep} className={`${step>=2?"btn-red":`btn-${!personal&&"dark"}-gray `} d-flex  py-2 rounded-5 w-100`}>
+              <span className="mx-auto">{step>=2?" Confirm the registration":"Next"} </span> <span className="text-dark pe-3"><IoIosArrowRoundForward size={30}/></span>
               </button>
             </div>
           </div>
+          </>
+         }
         </div>
       </div>
     </div>
@@ -123,7 +135,7 @@ const head = ["Personal info", "Investment info", "Account info"];
 
 const invest = [
   {
-    head: " Thomas, which asset class are you most interested to invest in?",
+    head: " Thomas, which asset className are you most interested to invest in?",
     isSingle: true,
     isIcon: true,
     field: "interestedToInvest",

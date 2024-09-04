@@ -1,12 +1,13 @@
 import React from "react";
 import "./dealPop.scss";
 import { BsX } from "react-icons/bs";
-import img from "../../../assets/all-img/investment.png"
 import { useNavigate } from "react-router-dom";
+import { getAuth } from "../../../utils/authenticationHelper";
+import { Server } from "../../../service/axios";
 
-const DealListpop = ({ setIsNew }) => {
+const DealListpop = ({ setIsNew,company, deals }) => {
   const navigate=useNavigate();
-  
+  const user= getAuth()?.user;  
   return (
     <div className="pop">
       <div className="pop-body col-md-10">
@@ -18,12 +19,12 @@ const DealListpop = ({ setIsNew }) => {
           />
         </div>
         <div className="">
-        <table class="table">
-          <thead class="thead-dark">
+        <table className="table">
+          <thead className="thead-dark">
             <tr>
               <th scope="col text-uppercase "> </th>
               <th scope="col text-uppercase "> DEAL NAME</th>
-              <th scope="col text-uppercase ">Asset CLASS</th>
+              <th scope="col text-uppercase ">Asset className</th>
               <th scope="col text-uppercase ">SECTOR</th>
               <th scope="col text-uppercase "> INVESTMENT 
               DATE</th>
@@ -35,17 +36,17 @@ const DealListpop = ({ setIsNew }) => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((val, key) => (
-              <tr key={key} className="p-3 " onClick={()=>navigate("about")}>
+            {deals?.map((val, key) => (
+              <tr key={key} className="p-3 " onClick={()=>navigate("about",{state:company?._id})}>
                 <td>
-                 <div className='bg-dark text-white rounded-circle' style={{width:"70px",aspectRatio:"1/1"}}> <img className='w-100 h-100 p-3' src={val?.img||img} alt="" /></div>
+                <div className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
                 </td>
-                <td>{val?.name}</td>
-                <td>{val?.asset}</td>
-                <td>{val?.sector}</td>
-                <td>{val?.investDate}</td>
-                <td>{val?.invest}</td>
-                <td>{val?.profit}</td>
+                <td className="text-capitalize">{company?.name}</td>
+                <td>{company?.dealSummary?.asset}</td>
+                <td>{company?.dealSummary?.profitLoss}</td>
+                <td>{val?.investedDate}</td>
+                <td>{val?.investors&&val?.investors?.find(v=>v.investerId===user?._id).amount}</td>
+                <td>{company?.dealSummary?.sector}</td>
                 <td>{val?.moic}</td>
                 <td>{val?.irr}</td>
                 <td>{val?.weight}</td>

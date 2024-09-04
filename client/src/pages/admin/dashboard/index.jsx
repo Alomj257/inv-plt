@@ -24,8 +24,8 @@ const handleDelete=async(id)=>{
 
   return (
     <div className="bg-white admin-dashboard h-100 ">
-      <table class="table">
-        <thead class="thead-dark">
+      <table className="table">
+        <thead className="thead-dark">
           <tr>
             <th scope="col"></th>
             <th scope="col">Member's Name</th>

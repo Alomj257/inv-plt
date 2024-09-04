@@ -1,4 +1,4 @@
-import { addDealRepo, deleteDealRepo, getAllDealByCompanyRepo, getAllDealByInvestorRepo, getAllDealRepo, getByIdDealRepo, updateDealRepo } from ".";
+import { addDealRepo, deleteDealRepo, getAllDealByCompanyAndUsersRepo, getAllDealByCompanyRepo, getAllDealByInvestorRepo, getAllDealRepo, getByIdDealRepo, updateDealRepo } from ".";
 import { showToast } from "../../utils/toasters";
 
 export const  addDealService=async(val)=>{
@@ -81,6 +81,19 @@ export const  addDealService=async(val)=>{
     export const  getAllDealByInvestorService=async(email)=>{
     try {
         const {data}=await getAllDealByInvestorRepo(email);
+        if(data?.message){
+            return showToast("error",data?.message);
+        }
+        return data;
+    } catch (error) {
+        console.log(error);
+        showToast("error",error?.response?.data?.messsage);
+    }
+    }
+
+    export const  getAllDealByUserAndCompanyService=async(userId)=>{
+    try {
+        const {data}=await getAllDealByCompanyAndUsersRepo(userId);
         if(data?.message){
             return showToast("error",data?.message);
         }

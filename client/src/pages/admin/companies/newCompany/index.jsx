@@ -6,6 +6,7 @@ import AddNewsPop from '../../../../components/admin/companies/addNewsPop';
 import { addCompanyService, getByIdCompanyService, updateCompanyService } from '../../../../service/company/companyService';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Server } from '../../../../service/axios';
+import { formatTimeFromNow } from '../../../../utils/formater/dateTimeFormater';
 const NewCompany = () => {
     const {state}=useLocation();
     const [isNews,setIsNew]=useState(false);
@@ -154,8 +155,7 @@ const handleSubmit=async(e)=>{
                     <div className="details bg-white rounded p-3 d-flex flex-column gap-3 ">
                     {news.length>0&&news?.map((val,i)=>(
                         <div className='d-flex  flex-column gap-2' key={i}>  <div className="d-flex justify-content-between"><a href={val?.link} className='text-dark' target="_blank" rel="noopener noreferrer"> {val?.name}</a> <div onClick={()=>removenews(val?.name)} className='ps-3 text-muted'><FaTrashAlt className='cursor-pointer'  size={20}/></div></div>
-                        <small className='text-muted tracking-normal'>{val?.date}</small>
-
+                        <small className='text-muted tracking-normal'>{formatTimeFromNow(val?.date)}</small>
                         </div>
                         ))}
                     </div>
@@ -211,7 +211,7 @@ const handleSubmit=async(e)=>{
 export default NewCompany;
 
 const data=[
-    {name:"asset",label:"ASSET CLASS"},
+    {name:"asset",label:"ASSET className"},
     { name:"investDate" ,     label:"INVESTMENT DATE"},
     { name:"cumulatedInvest" ,     label:"CUMULATED INVESTMENTS"},
     { name:"currentValuation" ,     label:"CURRENT VALUATION"},

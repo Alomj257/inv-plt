@@ -22,49 +22,49 @@ export const routes = [
   {
     path: "/admin",
     element: <AdminLayout role="admin" />,
-    needsAuth: false,
+    needsAuth: true,
     children:[
       {
         path: "member",
         element: <Dashboard role="admin" />,
-        needsAuth: false,
+        needsAuth: true,
       },
       {
         path: "member/personal-add",
         element: <CreateMamber role="admin" />,
-        needsAuth: false,
+        needsAuth: true,
       },
       {
         path: "member/personal-details",
         element: <CreateMamber role="admin" />,
-        needsAuth: false,
+        needsAuth: true,
       },
       {
         path: "companies",
         element: <Companies role="admin" />,
-        needsAuth: false,
+        needsAuth: true,
       },
       {
         path: "companies/new-company",
         element: <NewCompany role="admin" />,
-        needsAuth: false,
+        needsAuth: true,
       },
     ]
   },
   {
     path:"/customer",
     element:<CustomerLayout/>,
-    needsAuth:false,
+    needsAuth:true,
     children:[
      {
       path:"overview",
       element:<Portfolio/>,
-      needsAuth:false,
+      needsAuth:true,
      },
      {
       path:"overview/about",
       element:<AboutDeal/>,
-      needsAuth:false,
+      needsAuth:true,
      }
     ]
     

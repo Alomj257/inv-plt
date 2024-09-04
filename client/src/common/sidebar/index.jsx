@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import "./sidebar.scss";
 import logo from "../../assets/all-img/Logo-02-removebg-preview.png";
 import profile from "../../assets/profile/comment_2.png";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import {  NavLink, useLocation, useNavigate } from "react-router-dom";
+import { getAuth } from "../../utils/authenticationHelper";
 
 const Sidebar= ({ sidebarData }) => {
+  const user=getAuth()?.user;
+  const navigate=useNavigate();
   const [isClose, setIsClose] = useState(false);
   const {pathname} =useLocation();
   const paths=pathname.split("/")
@@ -24,15 +27,15 @@ const Sidebar= ({ sidebarData }) => {
             className={isClose?"side-closer more":"side-closer"}
             size={30}
           /> */}
-          <small className="side">Admin Dashboard</small>
+          <small className="side text-capitalize">{user?.account?.role==="ADMIN"?"Admin":"Customer"} Dashboard</small>
         </div>
         <div className="d-flex  gap-3 mx-auto">
           <div className="profile-img">
             <img src={profile} className="w-100 h-100 rounded-circle" alt="profile" />
           </div>
           <div className="d-flex flex-column justify-content">
-            <p className="m-0 p-0 text-light-gray "> ALESSANDRO SANTERO</p>
-            <Link to="" style={{fontSize:"14px"}} className=" text-gray fw-semibold"><span> Edit profile</span></Link>
+            <p className="m-0 p-0 text-light-gray text-capitalize"> {user?.personal?.firstName} {user?.personal?.lastName}</p>
+            <button onClick={()=>navigate("/admin/member/personal-details",{state:user?._id})} style={{fontSize:"14px"}} className=" text-gray btn px-0 text-decoration-underline fw-semibold"><span> Edit profile</span></button>
           </div>
           </div>
         </div>
