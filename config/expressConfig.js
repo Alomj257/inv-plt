@@ -22,6 +22,10 @@ app.use(
   "/company/profile",
   express.static(path.join(__dirname, "../public/company"))
 );
+app.use(
+  "/profile/pic",
+  express.static(path.join(__dirname, "../public/profile"))
+);
 app.use("/api/v1", Router);
 
 app.use((err, req, res, next) => {

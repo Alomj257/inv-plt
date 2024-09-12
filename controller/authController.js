@@ -26,7 +26,7 @@ const register = async (req, res) => {
     }
 
     const newUser = new User(req.body);
-    await sendEmail(MemberMessage(newUser),email,"Congratultions, Your account has been created by Anyma");
+    // await sendEmail(MemberMessage(newUser),email,"Congratultions, Your account has been created by Anyma");
     await newUser.save();
     res.status(201).json( "Your account is successfully created." );
   } catch (error) {
@@ -89,21 +89,26 @@ const getUserById = async (req, res) => {
 
 const updateUserDetails = async (req, res) => {
   try {
+    const {account,personal}=req.body;
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if (req.files) {
-      req.body.profile = "/profile/pic/" + req?.files[0]?.originalname;
+    if(account){
+      req.body.account=JSON.parse(account);
     }
-
-    console.log(req.body);
+    if(personal){
+      req.body.personal=JSON.parse(personal);
+    }
+    
+    if (req.files) {
+      req.body.personal.profile = "/profile/pic/" + req?.files?.profile[0]?.originalname;
+    }
     const updatedData = await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
     );
-    console.log(updatedData);
     res.status(200).json("User update successfully");
   } catch (error) {
     console.error(error);

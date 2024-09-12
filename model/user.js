@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      profile:String,
       city: String,
       dob: String,
       company:{type:String,required:true} ,

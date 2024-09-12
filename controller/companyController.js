@@ -82,13 +82,11 @@ exports.updateCompany=async(req,res)=>{
           if(req.body.investDoc){
           req.body.investDoc=JSON.parse(req.body.investDoc);
           }
-
-          console.log(req.files);
+console.log(req.files)
           if (req.files) {
             if (req.files.cover && req.files.cover[0]) {
               req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
             }
-          
             if (req.files.profile && req.files.profile[0]) {
               req.body.profile = "/company/profile/" + req.files.profile[0].originalname;
             }
