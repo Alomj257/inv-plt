@@ -2,7 +2,6 @@ const nodemailer = require("nodemailer");
 
 
 const sendEmail = (message, email, subject) => {
-  console.log(process.env.EMAIL, process.env.PASS);
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
