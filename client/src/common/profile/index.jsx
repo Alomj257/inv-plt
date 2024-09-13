@@ -1,48 +1,64 @@
 import React, { useEffect, useState } from "react";
 import "./createMamber.scss";
 import { useLocation } from "react-router-dom";
-import { getUserByIdService, registerService, updateAuthService } from "../../../../service/auth/AuthService";
-import { generateRandomPassword } from "../../../../utils/randomPassword";
-import Investments from "./investments";
-const CreateMamber = () => {
-  const {pathname,state}=useLocation();
-  const paths=pathname.split("/");
+import { getUserByIdService,  updateAuthService } from "../../service/auth/AuthService";
+import { getAuth } from "../../utils/authenticationHelper";
+import profile from "../../assets/profile/comment_2.png";
+import { FaPen } from "react-icons/fa";
+import { Server } from "../../service/axios";
+const Profile = () => {
+    const {state}=useLocation();
+  const id=getAuth()?.user?._id|| state;
   const [member,setMember]=useState(null);
   const [isEdit,setIsEdit]=useState(false);
-  
+  const [preview,setpeview]=useState(null);
 
   const handleChange=(e)=>{
-    const {name,value}=e.target;
-    setMember({...member,[name]:value});
+    const {name,value,files}=e.target;
+    try {
+        if(files){
+            setpeview(files[0]);
+        }
+        setMember({...member,[name]:files?files[0]:value});
+    } catch (error) {
+        console.log(error);
+    }
+   
   }
+
+
   useEffect(()=>{
     const handleGet=async()=>{
-      const data=await getUserByIdService(state);
+      const data=await getUserByIdService(id);
       setMember({...data?.account,...data?.personal});
     }
-    if(state){
+    if(id){
       handleGet();
     }
-  },[state]);
+  },[id]);
   
 
 
 
   const handleSubmit=(e)=>{
     e.preventDefault();
-    if(state){
-      updateAuthService(state,{personal:{...member},account:{...member}});
+    const details={personal:{...member},account:{...member}};
+    const formData=new FormData();
+    formData.append('account',JSON.stringify(details.account));
+    formData.append('personal',JSON.stringify(details.personal));
+    if(member.profile){
+        formData.append("profile",member.profile);
+    }
+    if(id){
+      updateAuthService(id,formData);
       setIsEdit(false);
       return;
     }
-    const password=generateRandomPassword();
-    registerService({account:{...member ,password:password,cnfPassword:password},personal:{...member}});
   }
 
   return (
     <>
-      {state && (
-        <div className="d-flex my-3 py-3  admin-header justify-content-between align-items-center">
+    <div className="d-flex my-3 py-3  admin-header justify-content-between align-items-center">
           <h5 className="text-capitalize m-0 fw-semibold">Personal Details</h5>
           <div className="right-profile  d-flex gap-4">
             {!isEdit && (
@@ -57,11 +73,20 @@ const CreateMamber = () => {
             )}
           </div>
         </div>
-      )}
+      
       <form action="" onSubmit={handleSubmit}>
         <div className="bg-white create-mamber">
           <div className="container">
             <div className="row">
+                <div className="profile d-flex justify-content-center ">
+                    <div className="position-relative" style={{width:"150px",aspectRatio:"1/1"}}>
+                    <img src={(preview&&URL.createObjectURL(preview))||Server+member?.profile}   className="h-100 rounded-circle  w-100" alt="" />
+                  {isEdit&&  <label htmlFor="profile" className="position-absolute cursor-pointer" style={{bottom:"25%",right:"-10%"}}>
+                        <input onChange={handleChange} type="file" name="profile" className="position-absolute" style={{opacity:0}} />
+                       <div  className="bg-very-light-gray p-2 rounded-circle cursor-pointer  " ><FaPen size={25}/></div> 
+                    </label>}
+                </div>
+                </div>
               <div className="row row-cols-3">
                 {fieldData?.map((val, index) => (
                   <div key={index}>
@@ -72,13 +97,13 @@ const CreateMamber = () => {
                         <input
                           type="text"
                           style={{
-                            cursor: state
+                            cursor: id
                               ? isEdit
                                 ? "auto"
                                 : "not-allowed"
                               : "auto",
                           }}
-                          disabled={state ? !isEdit : false}
+                          disabled={id ? !isEdit : false}
                           onChange={handleChange}
                           value={member && member[val?.name]}
                           name={val?.name}
@@ -93,28 +118,18 @@ const CreateMamber = () => {
           </div>
         </div>
 
-        {(isEdit || !state) && (
+        {(isEdit || !id) && (
           <div className="text-center">
             <button className="btn-red rounded-5 px-4 my-3">Save</button>
           </div>
         )}
       </form>
 
-      {!paths?.includes("personal-add") && (
-        <div className="h-50">
-          <div className="my-3">
-            <div className="bg-dark py-4 px-5 rounded d-flex justify-content-between">
-              <h5 className="text-white">Investments</h5>
-            </div>
-          </div>
-         <Investments userId={state}/>
-        </div>
-      )}
     </>
   );
 };
 
-export default CreateMamber;
+export default Profile;
 
 
 const fieldData = [

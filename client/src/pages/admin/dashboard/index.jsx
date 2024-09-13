@@ -39,12 +39,12 @@ const handleDelete=async(id)=>{
           {members&&members?.map((val, key) => (
             <tr key={key}>
               <td style={{ width: "60px", aspectRatio: "1/1" }}>
-                <img className="w-100 h-100" src={val?.img || img} alt="" />
+                {/* <img className="w-100 h-100" src={val?.img || img} alt="" /> */}
               </td>
               <td>{val?.personal?.firstName} {val?.personal?.lastName}</td>
               <td>{val?.account?.email}</td>
-              <td>{val?.investment}</td>
-              <td>{val?.amount}</td>
+              <td>&euro; {val?.investment?val?.investment:0}</td>
+              <td>&euro; {val?.amount?val?.amount:0}</td>
               <td className="d-flex gap-3">
                 <button
                   onClick={() => navigate("personal-details",{state:val?._id})}

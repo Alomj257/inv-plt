@@ -6,6 +6,7 @@ import AddDealPop from '../../../components/admin/companies/createDealPop'
 import { useNavigate } from 'react-router-dom'
 import { getAllCompanyService } from '../../../service/company/companyService'
 import { Server } from '../../../service/axios'
+import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
 
 const Companies = () => {
   const [isDeal,setIsDeal]=useState(false);
@@ -38,8 +39,8 @@ const Companies = () => {
            <div style={{ width: "60px", aspectRatio: "1/1" }}>   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
             </td>
             <td className='text-uppercase '>{val?.name}</td>
-            <td>${val?.dealSummary?.cumulatedInvest}</td>
-            <td>${val?.dealSummary?.currentValuation}</td>
+            <td> {currencyFormatter( val?.dealSummary?.cumulatedInvest)}</td>
+            <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
             <td className="d-flex gap-4">
             <button className="btn-red" onClick={()=>{setIsDeal(!isDeal);setCompanyId(val?._id);}}>
               Create a deal

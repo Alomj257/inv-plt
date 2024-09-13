@@ -135,7 +135,7 @@ const head = ["Personal info", "Investment info", "Account info"];
 
 const invest = [
   {
-    head: " Thomas, which asset className are you most interested to invest in?",
+    head: " which asset classe(s) are you most interest to invest in?",
     isSingle: true,
     isIcon: true,
     field: "interestedToInvest",
@@ -181,7 +181,7 @@ const invest = [
     ],
   },
   {
-    head: "Which geographical region are you most inclined to invest in?",
+    head: "Which geographical regions are you most inclined to invest in?",
     field: "region",
     isSingle: true,
     isIcon: true,

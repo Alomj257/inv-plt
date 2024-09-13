@@ -64,7 +64,7 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                     setDeal({ ...deal, currentValue: e.target.value })
                   }
                   className="input-field"
-                  placeholder="4,500,000"
+                  placeholder=" 4,500,000 €"
                 />
               </div>
               <div className="field">
@@ -108,7 +108,7 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                     name="amount"
                     value={field.amount}
                     className="input-field"
-                    placeholder="500,000"
+                    placeholder=" 500,000 €"
                     onChange={(event) => handleChange(index, event)}
                   />
                 </div>

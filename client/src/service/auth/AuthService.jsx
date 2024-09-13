@@ -1,5 +1,6 @@
 import { deleteUserRepo, getAllUserByRoleRepo, getAllUsersRepo, getAuthByIdRepo, loginRepo, registerRepo, updateAuthRepo } from ".";
-import { showToast } from "../../utils/toasters"
+import { setAuth } from "../../utils/authenticationHelper";
+import { showToast } from "../../utils/toasters";
 
 export  const registerService=async(val)=>{
     try {
@@ -21,11 +22,12 @@ export  const loginService=async(val)=>{
             showToast("error",data?.message);
             return;
         }
-        localStorage.setItem("auth",JSON.stringify(data));
+       setAuth(data);
         showToast("success",data);
         return data;
     } catch (error) {
         showToast("error",error?.response?.data?.message);
+        return;
     }
 }
 

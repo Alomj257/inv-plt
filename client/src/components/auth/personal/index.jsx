@@ -40,7 +40,7 @@ const Personal = ({setPersonal}) => {
                 type={val?.name==="dob"?"date":"text"}
                 name={val?.name}
                 onChange={handleChange}
-                placeholder={val?.place}
+                // placeholder={val?.place}
                 className="input-field text-white"
               />
             )}
@@ -57,8 +57,8 @@ export default Personal;
 
 
 const fieldData = [
-  { place: "Thomas", type: "input", name: "firstName", label: "First name" },
-  { place: "Domingue", type: "input", name: "lastName", label: "Last name" },
+  { place: "First ", type: "input", name: "firstName", label: "First name" },
+  { place: "", type: "input", name: "lastName", label: "Last name" },
   {
     place: "Paris, France",
     type: "input",

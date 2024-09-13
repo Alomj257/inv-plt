@@ -4,10 +4,10 @@ body{
 }
 
 h1,h2,h3,h4,h5,label,input,button{
-    font-family:$robot !important;
+    font-family:graphit !important;
 }
-p,div,li{
-    font-family: Arial, Helvetica, sans-serif !important;
+p,div,li,small{
+    font-family: melody !important;
 }
 .bg-very-light-gray{
     background: $very-light-color !important;
@@ -15,9 +15,11 @@ p,div,li{
 .bg-green{
     background:$green;
 }
+
 .inset-0{
     inset: 0;
 }
+
 .bg-pink{
     background: $yellowpink;
 }

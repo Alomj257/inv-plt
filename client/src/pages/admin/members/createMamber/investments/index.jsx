@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getAllDealByUserAndCompanyService } from '../../../../../service/deal/dealService';
 import { getByIdCompanyService } from '../../../../../service/company/companyService';
+import { getAuth } from '../../../../../utils/authenticationHelper';
 
 const Investments = ({userId}) => {
   const [company,setCompany]=useState([]);
@@ -20,7 +21,7 @@ const Investments = ({userId}) => {
                 <tr>
                   <th scope="col text-uppercase "> </th>
                   <th scope="col text-uppercase "> COMPANY</th>
-                  <th scope="col text-uppercase ">Asset className</th>
+                  <th scope="col text-uppercase ">Asset Class</th>
                   <th scope="col text-uppercase ">Net Profit(Loss)</th>
                   <th scope="col text-uppercase ">SECTOR</th>
                   <th scope="col text-uppercase ">NET MOIC</th>
@@ -46,6 +47,7 @@ export default Investments;
 
 const Company=({companyId,index,deals})=>{
 const [company,setCompany]=useState(null);
+const user=getAuth()?.user;
 
 useEffect(()=>{
   const getCompanyById=async()=>{
@@ -67,7 +69,7 @@ useEffect(()=>{
                       <td>{company?.totalInvet}</td>
                       <td>{company?.irr}</td>
                       <td className="d-flex gap-3">
-                        <button className="btn-red">
+                        <button style={{cursor:user?.account?.role==='ADMIN'?"not-allowed":"pointer"}} disabled={user?.account?.role==='ADMIN'} className="btn-red">
                           {deals?.length} Investments
                         </button>
                       </td>

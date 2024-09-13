@@ -1,11 +1,27 @@
-import { showToast } from "../toasters"
 
 export const getAuth=()=>{
     try {
         return JSON.parse(localStorage.getItem('auth')||'');
     } catch (error) {
         console.log(error)
-        showToast("error","somthing went wrong");
         return;
+    }
+}
+
+export const setAuth=(data)=>{
+    try {
+        localStorage.setItem("auth",JSON.stringify(data));
+        return
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const logout=()=>{
+    try {
+        localStorage.removeItem("auth");
+        return;
+    } catch (error) {
+      console.log(error)  
     }
 }

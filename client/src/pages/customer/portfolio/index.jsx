@@ -10,19 +10,63 @@ import {  getByIdCompanyService } from '../../../service/company/companyService'
 import { getAllDealByUserAndCompanyService } from '../../../service/deal/dealService'
 import { Server } from '../../../service/axios'
 import { getAuth } from '../../../utils/authenticationHelper'
+import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
+import { portfolioIrrParameter } from '../../../utils/calculationConversion'
+import { calculatePortfolioIrr } from '../../../utils/calculations/portfolioIrr'
 const Portfolio = () => {
   const [company,setCompany]=useState([]);
-  const userId=getAuth().user?._id;
+  const [totalInvestments,setTotalInvestment]=useState(0);
+  const [totalInvested,setTotalInvested]=useState(0);
+  const [irrVal,setIrr]=useState(0);
+  const userId=getAuth()?.user?._id;
+
+  
+const fieldData = [
+   {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
+   {name:"  CURRENT VALUATION",qty:currencyFormatter(8500000),icon:valuation},
+   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
+   {name:"  NET MOIC",qty:"12%",icon:moic},
+   {name:" NET PROFIT (LOSS)",qty:currencyFormatter(4000000),icon:profit},
+   {name:"  NET IRR",qty:irrVal,icon:irr},
+  ];
 
   useEffect(()=>{
     const getCompany=async()=>{
       const data=await getAllDealByUserAndCompanyService(userId);
+      setTotalInvestment(() => {
+        const totalDeals = data.reduce((sum, item) => {
+          return sum + (item?.deals?.length || 0);
+        }, 0);
+        return totalDeals;
+      });
+      setTotalInvested(() => {
+        const totalDeals = data.reduce((sum, item) => {
+          const dealSum = item?.deals?.reduce((dealSum, deal) => {
+            const investor = deal?.investors?.find(
+              (v) => v?.investerId === userId
+            );
+            return dealSum + parseInt(investor?.amount || 0);
+          }, 0);
+          return sum + dealSum;
+        }, 0);
+        return totalDeals;
+      });
+      const { totalCurrentValue, currentDate, investments } =
+        portfolioIrrParameter(data, userId);
+      if (totalCurrentValue && currentDate && investments) {
+        const ans = calculatePortfolioIrr(
+          investments,
+          currentDate,
+          totalCurrentValue
+        );
+        setIrr(ans);
+      }
+
       setCompany(data);
     }
     getCompany();
   },[userId])
-  console.log()
-
+  console.log(company)
   return (
     <>
     {/* overview */}
@@ -59,7 +103,7 @@ const Portfolio = () => {
             <tr>
               <th scope="col text-uppercase "> </th>
               <th scope="col text-uppercase "> COMPANY</th>
-              <th scope="col text-uppercase ">Asset className</th>
+              <th scope="col text-uppercase ">Asset Class</th>
               <th scope="col text-uppercase ">Net Profit(Loss)</th>
               <th scope="col text-uppercase ">SECTOR</th>
               <th scope="col text-uppercase ">NET MOIC</th>
@@ -70,7 +114,7 @@ const Portfolio = () => {
           </thead>
           <tbody>
             {company&&company.length>0&&company?.map((val, key) => (
-              <Company index={key} companyId={val?._id} deals={val?.deals}/>
+              <Company list={company} index={key} companyId={val?._id} userId={userId} deals={val?.deals}/>
             ))}
           </tbody>
         </table>
@@ -82,26 +126,37 @@ const Portfolio = () => {
 
 export default Portfolio
 
-const fieldData = [
-   {name:" TOTAL INVESTMENTS",qty:"6",icon:invest},
-   {name:"  CURRENT VALUATION",qty:"£ 8,500,000",icon:valuation},
-   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:"£ 4,500,000",icon:amount},
-   {name:"  NET MOIC",qty:"12%",icon:moic},
-   {name:" NET PROFIT (LOSS)",qty:" £ 4,000,000",icon:profit},
-   {name:"  NET IRR",qty:" 90%",icon:irr},
-  ];
   
-const Company = ({ companyId, index, deals }) => {
+const Company = ({ companyId,list, index, deals,userId }) => {
   const [company, setCompany] = useState(null);
   const [isDealList, setisDealList] = useState(false);
+  const [totalIvestMents,setTotalInvestMent]=useState(0);
+  const [irr,setIrr]=useState(0);
+  
+
+
 
   useEffect(() => {
     const getCompanyById = async () => {
       const data = await getByIdCompanyService(companyId);
       setCompany(data);
+      setTotalInvestMent(() => {
+        const totalDeals = deals.reduce((sum, item) => {
+          const investor=item?.investors?.find(v=>v.investerId===userId);
+          return sum + ( parseInt(investor?.amount || 0));
+        }, 0);
+        return totalDeals;
+      });
+      
+      const filteredList=list?.filter(v=>v._id===companyId);
+      const {totalCurrentValue, currentDate, investments}=portfolioIrrParameter(filteredList,userId);
+      if(totalCurrentValue&&currentDate&&investments){
+        setIrr(calculatePortfolioIrr(investments,currentDate,totalCurrentValue));
+      }
+
     };
     getCompanyById();
-  }, [company]);
+  }, [companyId]);
   return (
     <>
       <tr key={index} className="p-3 ">
@@ -113,8 +168,8 @@ const Company = ({ companyId, index, deals }) => {
         <td>{company?.dealSummary?.profitLoss}</td>
         <td>{company?.dealSummary?.sector}</td>
         <td>{company?.moic}</td>
-        <td>{company?.totalInvet}</td>
-        <td>{company?.irr}</td>
+        <td>{currencyFormatter(totalIvestMents)}</td>
+        <td>{irr}</td>
         <td className="d-flex gap-3">
           <button onClick={() => setisDealList(true)} className="btn-red">
             {deals && deals?.length} Investments

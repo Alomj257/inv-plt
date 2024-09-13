@@ -12,6 +12,7 @@ const Header= ({ role }) => {
   // personal-add
   console.log(curPage.toLowerCase())
   const Button=()=>{
+   
     if(curPage.toLocaleLowerCase()==="member"){
     return <Link to="member/personal-add" className="btn-red text-decoration-none"> Create a new member</Link>
     }
@@ -24,7 +25,7 @@ const Header= ({ role }) => {
   }
 
   return (<>
-   {curPage.toLocaleLowerCase()!=="personal details"&&<div id={role} className="d-flex  admin-header justify-content-between align-items-center">
+   {(curPage.toLocaleLowerCase()!=="personal details"&&curPage.toLocaleLowerCase()!=="profile")&&<div id={role} className="d-flex  admin-header justify-content-between align-items-center">
       <h5 className="text-capitalize m-0 fw-semibold">{curPage}</h5>
       <div className="right-profile  d-flex gap-4">
         <div><Button/></div>

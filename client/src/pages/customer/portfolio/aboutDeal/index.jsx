@@ -20,7 +20,6 @@ const AboutDeal = () => {
         getCompanyById();
     },[state]);
 
-    console.log(company)
 
     return (
       <div className='new-company'>
@@ -30,7 +29,6 @@ const AboutDeal = () => {
                   <div>
                       <div className='cover-profile d-flex flex-column'>
                           <img src={Server+company?.cover||img} className='position-absolute rounded-3 inset-0 w-100 h-100' alt="cover" />
-                        
                           <div className="mt-auto">
                           <div className="profile  ">
                               <img src={Server+company?.profile||pro} className='position-absolute rounded-circle w-100 h-100' style={{inset:"0"}} alt="" />

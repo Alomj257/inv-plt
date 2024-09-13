@@ -9,6 +9,7 @@ import Portfolio from "../pages/customer/portfolio";
 import AboutDeal from "../pages/customer/portfolio/aboutDeal";
 import Login from "../common/login";
 import Register from "../common/register";
+import Profile from "../common/profile";
 
 export const routes = [
   { path: "/login",
@@ -49,6 +50,11 @@ export const routes = [
         element: <NewCompany role="admin" />,
         needsAuth: true,
       },
+      {
+        path:"profile",
+        element:<Profile/>,
+        needsAuth:true,
+       }
     ]
   },
   {
@@ -65,8 +71,12 @@ export const routes = [
       path:"overview/about",
       element:<AboutDeal/>,
       needsAuth:true,
+     },
+     {
+      path:"profile",
+      element:<Profile/>,
+      needsAuth:true,
      }
     ]
-    
   }
 ];

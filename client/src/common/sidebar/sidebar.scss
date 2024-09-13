@@ -48,6 +48,11 @@ transition: all $time;
             border-radius:  14px;
             border: 2px solid $dark-orange;
           }
+          &.not:hover{
+            border: 2px solid transparent;
+            cursor: not-allowed;
+            border-radius: 0;
+          }
           &.active {
             border-radius:  14px;
             border: 2px solid $dark-orange;

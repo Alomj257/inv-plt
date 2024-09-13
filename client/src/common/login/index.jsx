@@ -11,7 +11,8 @@ const Login = () => {
         setVal({...val,[name]:value});
     }
 
-    const handleAdd=async()=>{
+    const handleSubmit=async(e)=>{
+      e.preventDefault();
       const data=await loginService(val);
       console.log(data);
       if(data&&data?.user?.account?.role==="ADMIN"){
@@ -23,6 +24,7 @@ const Login = () => {
   return (
     <div className='login-pop'>
         <div className="pop-body col-6">
+        <form action="" onSubmit={handleSubmit}>
             {/* <div className='text-end'> <BsX onClick={()=>setIsNew(pre=>!pre)} className='cursor-pointer' size={30}/></div> */}
             <h5 className='text-center mb-4 fs-4'>Sign In</h5>
             <div className='d-flex flex-column gap-4'>
@@ -35,9 +37,10 @@ const Login = () => {
                     <input type="password" name='password' onChange={handleChange} className='input-field' placeholder='Password' />
                 </div>
                 <div className="text-center">
-                    <button type='button' onClick={handleAdd} className="btn-red col-3 rounded-5">Login</button>
+                    <button type='submit'  className="btn-red col-3 rounded-5">Login</button>
                 </div>
             </div>
+        </form>
         </div>
       
     </div>

@@ -27,12 +27,12 @@ const CustomerLayout = () => {
 export default CustomerLayout;
 
 const sidebarData=[
-  {
-    icon: <MdHome />,
-    name: "Home",
-    path: "home",
-    soon:true,
-  },
+  // {
+  //   icon: <MdHome />,
+  //   name: "Home",
+  //   path: "home",
+  //   soon:true,
+  // },
   {
     icon: <FaBriefcase /> ,
     name: "Portfolio",
