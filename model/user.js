@@ -19,9 +19,9 @@ const userSchema = new mongoose.Schema(
       industry: String,
     },
     investmentInfo: {
-      interestedToInvest: String, 
+      interestedToInvest: [String], 
       sectors: [String], 
-      region: String,
+      region: [String],
       investorType: String,
       expertise: String,
       passions: String,

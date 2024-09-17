@@ -55,7 +55,7 @@ exports.getDealsByInvestor=async(req,res)=>{
     try {
         const deal=await Deal.find({
             investors: {
-              $elemMatch: { name: req.params.investorEMail }
+              $elemMatch: { investerId: req.params.investorId }
             }
           });
         if(!deal){

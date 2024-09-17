@@ -14,6 +14,7 @@ import {
   currencyFormatter,
   formatTimeFromNow,
 } from "../../../../utils/formater/dateTimeFormater";
+import { getInvestmentsAndCurrent } from "../../../../utils/totalInvestmentAndCurrenctByCompany";
 const NewCompany = () => {
   const { state } = useLocation();
   const [isNews, setIsNew] = useState(false);
@@ -28,11 +29,14 @@ const NewCompany = () => {
   const [investDoc, setInvestDoc] = useState([]);
   const [updateFileName, setUpdateFileName] = useState([]);
   const [investFileName, setInvestFileName] = useState([]);
+  const [totalInvestments,setInvestments]=useState(0);
+  const [current,setCurrent]=useState(0);
 
   // const [updateFileList,setUpdateFile]=useState([])
   // const [investFileList,setInvestFile]=useState([])
-
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     const handle = async () => {
@@ -47,6 +51,18 @@ const NewCompany = () => {
       handle();
     }
   }, [state]);
+
+  useEffect(()=>{
+    const handle=async()=>{
+      if(company?._id){
+    const {totalInvestment,current}=await getInvestmentsAndCurrent(company?._id);
+    setDeal({...deal,cumulatedInvest:totalInvestment,
+      currentValuation:current})
+    }
+  }
+    handle();
+  },[company?._id])
+
 
   const handleChange = (e) => {
     try {
@@ -63,10 +79,12 @@ const NewCompany = () => {
       console.log(error);
     }
   };
+
   const handleDeal = (e) => {
     const { name, value } = e.target;
     setDeal({ ...deal, [name]: value });
   };
+
   const handlepdateDoc = (e) => {
     try {
       const { name, files } = e.target;
@@ -86,6 +104,7 @@ const NewCompany = () => {
       console.log(error);
     }
   };
+
   const handleInvestDoc = (e) => {
     try {
       const { name, files } = e.target;
@@ -105,7 +124,6 @@ const NewCompany = () => {
       console.log(error);
     }
   };
-  console.log(investDoc);
   const removeInvestDoc = (id) => {
     setInvestDoc((pre) => pre.filter((v) => v.id !== id));
   };
@@ -129,8 +147,8 @@ const NewCompany = () => {
     }
     formData.append("dealSummary", JSON.stringify(deal));
     formData.append("news", JSON.stringify(news));
-    formData.append("update", JSON.stringify(updateDoc));
-    formData.append("investDoc", JSON.stringify(investDoc));
+    formData.append("update", updateDoc);
+    formData.append("investDoc", investDoc);
     if (state) {
       await updateCompanyService(state, formData);
       navigate(-1);
@@ -139,6 +157,12 @@ const NewCompany = () => {
     await addCompanyService(formData);
     navigate(-1);
   };
+
+
+
+  
+
+
 
   return (
     <form action="" onSubmit={handleSubmit}>
@@ -198,8 +222,8 @@ const NewCompany = () => {
                         name="name"
                         onChange={handleChange}
                         value={company?.name}
-                        className="py-2 rounded"
-                        placeholder="company name"
+                        className="py-2 rounded ms-3"
+                        placeholder="company name "
                       />
                     ) : (
                       <span className="text-uppercase ps-2 fw-bold">{company?.name}</span>
@@ -251,7 +275,7 @@ const NewCompany = () => {
                       <br />
                       <div>
                         {isDealEdit ? (
-                          <input
+                          val?.type==='input'&&<input
                             name={val?.name}
                             onChange={handleDeal}
                             type={val?.name === "investDate" ? "date" : "text"}
@@ -260,8 +284,8 @@ const NewCompany = () => {
                           />
                         ) : deal && deal[val?.name] ? (
                           <span className="fw-semibold">
-                            {money.includes(val?.name) &&
-                              currencyFormatter(deal[val?.name])}
+                            {money.includes(val?.name) ?
+                              currencyFormatter(deal[val?.name]):deal[val?.name]}
                           </span>
                         ) : (
                           "-"
@@ -429,12 +453,15 @@ const NewCompany = () => {
 
 export default NewCompany;
 
+
 const data = [
-  { name: "asset", label: "ASSET CLASS" },
-  { name: "investDate", label: "INVESTMENT DATE" },
-  { name: "cumulatedInvest", label: "CUMULATED INVESTMENTS" },
+  { name: "asset", label: "ASSET CLASS" ,type:"input"},
+  { name: "investDate", label: "INVESTMENT DATE",type:"input" },
+  { name: "sector", label: "SECTOR",type:"input" },
+  { name: "cumulatedInvest", label: "CUMULATED INVESTMENTS", },
   { name: "currentValuation", label: "CURRENT VALUATION" },
   { name: "profitLoss", label: "TOTAL PROFIT (LOSS)" },
 ];
+
 
 const money = ["cumulatedInvest", "currentValuation", "profitLoss"];

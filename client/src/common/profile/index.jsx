@@ -51,6 +51,7 @@ const Profile = () => {
     if(id){
       updateAuthService(id,formData);
       setIsEdit(false);
+      window.location.reload();
       return;
     }
   }
@@ -78,8 +79,8 @@ const Profile = () => {
           <div className="container">
             <div className="row">
                 <div className="profile d-flex justify-content-center ">
-                    <div className="position-relative" style={{width:"150px",aspectRatio:"1/1"}}>
-                    <img src={(preview&&URL.createObjectURL(preview))||Server+member?.profile}   className="h-100 text-very-light-gray rounded-circle  w-100" alt="" />
+                    <div className="position-relative " style={{width:"150px",aspectRatio:"1/1"}}>
+                    <img src={(preview&&URL.createObjectURL(preview))||Server+member?.profile}   className="h-100 bg-light rounded-circle  w-100" alt="" />
                   {isEdit&&  <label htmlFor="profile" className="position-absolute cursor-pointer" style={{bottom:"25%",right:"-10%"}}>
                         <input onChange={handleChange} type="file" name="profile" className="position-absolute" style={{opacity:0}} />
                        <div  className="bg-very-light-gray p-2 rounded-circle cursor-pointer  " ><FaPen size={25}/></div> 

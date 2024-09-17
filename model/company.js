@@ -19,9 +19,7 @@ const companySchema=new mongoose.Schema({
     dealSummary:{
         asset:String,
         investDate:String,
-        cumulatedInvest:String,
-        currentValuation:String,
-        profitLoss:String
+        sector:String,
     },
     news:Array,
     update:Array,

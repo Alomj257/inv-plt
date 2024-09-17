@@ -2,55 +2,46 @@ const Company = require("../model/company");
 
 exports.createCompany=async(req,res)=>{
     try {
-        // if (req.files) {
-        //     if (req.files.cover && req.files.cover[0]) {
-        //         req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
-        //       }
-        //       if (req.files.profile && req.files.profile[0]) {
-        //         req.body.profile = "/company/profile/" + req.files.profile[0].originalname;
-        //       }
-        //   }
-        if (req.files) {
-          if (req.files.cover && req.files.cover[0]) {
-            req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
-          }
-        
-          if (req.files.profile && req.files.profile[0]) {
-            req.body.profile = "/company/profile/" + req.files.profile[0].originalname;
-          }
-        
-          if (!req.body.investDoc) {
-            req.body.investDoc = [];
-          }
-        
-          if (req.files.update && req.files.update.length > 0) {
-            req.body.update = req.files.update.map((file, index) => ({
-              ...file,
-              updatedoc: "/company/update/" + file.originalname,
-            }));
-          }
-        
-          if (req.files.investDoc && req.files.investDoc.length > 0) {
-            req.body.investDoc = req.files.investDoc.map((file, index) => ({
-              ...file,
-              updatedoc: "/company/investDoc/" + file.originalname,
-            }));
-          }
+      if(req.body.dealSummary){
+        req.body.dealSummary=JSON.parse(req.body.dealSummary);
         }
-        
-        
-          if(req.body.dealSummary){
-          req.body.dealSummary=JSON.parse(req.body.dealSummary);
-          }
-          if(req.body.news){
-          req.body.news=JSON.parse(req.body.news);
-          }
-          if(req.body.update){
-          req.body.update=JSON.parse(req.body.update);
-          }
-          if(req.body.investDoc){
-          req.body.investDoc=JSON.parse(req.body.investDoc);
-          }
+        if(req.body.news){
+        req.body.news=JSON.parse(req.body.news);
+        }
+        // if(req.body.update){
+        //   console.log(req.body.update)
+        // req.body.update=JSON.parse(req.body.update);
+        // }
+        // if(req.body.investDoc){
+        // req.body.investDoc=JSON.parse(req.body.investDoc);
+        // }
+              if (req.files) {
+                if (req.files.cover && req.files.cover[0]) {
+                  req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
+                }
+                if (req.files.profile && req.files.profile[0]) {
+                  req.body.profile = "/company/profile/" + req.files.profile[0].originalname;
+                }
+              
+                if (!req.body.investDoc) {
+                  req.body.investDoc = [];
+                }
+             
+              
+                if (req.files.update && req.files.update.length > 0) {
+                  req.body.update = req.files.update.map((file, index) => ({
+                    ...file,
+                    updatedoc: "/company/update/" + file.originalname,
+                  }));
+                }
+              
+                if (req.files.investDoc && req.files.investDoc.length > 0) {
+                  req.body.investDoc = req.files.investDoc.map((file, index) => ({
+                    ...file,
+                    updatedoc: "/company/investDoc/" + file.originalname,
+                  }));
+                }
+              }
        
         const company=await Company.findById(req.body.creatorId);
         if(company){
@@ -76,13 +67,12 @@ exports.updateCompany=async(req,res)=>{
           if(req.body.news){
           req.body.news=JSON.parse(req.body.news);
           }
-          if(req.body.update){
-          req.body.update=JSON.parse(req.body.update);
-          }
-          if(req.body.investDoc){
-          req.body.investDoc=JSON.parse(req.body.investDoc);
-          }
-console.log(req.files)
+          // if(req.body.update){
+          // req.body.update=JSON.parse(req.body.update);
+          // }
+          // if(req.body.investDoc){
+          // req.body.investDoc=JSON.parse(req.body.investDoc);
+          // }
           if (req.files) {
             if (req.files.cover && req.files.cover[0]) {
               req.body.cover = "/company/cover/" + req.files.cover[0].originalname;

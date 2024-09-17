@@ -10,7 +10,7 @@ export  const registerService=async(val)=>{
             return data;
         }
         showToast("success",data);
-        return error?.response?.data;
+        return data;
     } catch (error) {
         showToast("error",error?.response?.data?.message);
         return error?.response?.data;

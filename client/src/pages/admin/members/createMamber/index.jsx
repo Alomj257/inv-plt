@@ -12,7 +12,6 @@ const CreateMamber = () => {
   const [member,setMember]=useState(null);
   const [isEdit,setIsEdit]=useState(false);
   
-
   const handleChange=(e)=>{
     const {name,value}=e.target;
     setMember({...member,[name]:value});

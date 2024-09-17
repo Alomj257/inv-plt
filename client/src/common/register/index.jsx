@@ -17,7 +17,7 @@ const Register = () => {
   const [subTask, setTask] = useState(0);
   const [personal, setPersonal] = useState(null);
   const [account, setAccount] = useState(null);
-  const [investVal, setInvestVal] = useState(null);
+  const [investVal, setInvestVal] = useState({});
   const [isPop,setIspop]=useState(false);
   const [params]=useSearchParams();
     const emailToken=params.get('emailToken');
@@ -36,7 +36,6 @@ const Register = () => {
     },
     { com: <Account setAccount={setAccount} /> },
   ];
-  
   useEffect(() => {
     if (emailToken && expiration) {
       setStep(1);
@@ -80,7 +79,7 @@ const Register = () => {
     if(msg?.message){
       return;
     }
-      // setStep(step+1);
+      setStep(step+1);
       return;
     }
 

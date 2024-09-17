@@ -6,7 +6,7 @@ dealRoutes.put("/:id",updateDeal);
 dealRoutes.delete("/:id",deleteDeal);
 dealRoutes.get("/:id",getByIdDeal);
 dealRoutes.get("/company/:companyId",getAllBycompanyIdDeal);
-dealRoutes.get("/investor/:investorEMail",getDealsByInvestor);
+dealRoutes.get("/investor/:investorId",getDealsByInvestor);
 dealRoutes.get("/investor/company/:investorId",getAllDealsWithUserIdAndCompany);
 dealRoutes.get("/",getAllDeal);
 

@@ -23,6 +23,11 @@ const Sidebar = ({ sidebarData }) => {
     hande();
   },[userId]);
 
+    const handleLogout=()=>{
+      logout()
+      navigate("/");
+    }
+
   return (
     <div className={`sidebar-upper ${isClose ? "side-open" : ""}`}>
       <div className="sidebar">
@@ -104,7 +109,7 @@ const Sidebar = ({ sidebarData }) => {
               </li>
             </NavLink>
           ))}
-          <button onClick={()=>logout()} className="btn text-white  d-flex">
+          <button onClick={handleLogout} className="btn text-white  d-flex">
               <li>
                 <span><IoMdLogOut/></span>
                 {!isClose && (

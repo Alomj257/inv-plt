@@ -47,10 +47,10 @@ const DealListpop = ({ setIsNew,company, deals }) => {
                 <td>{company?.dealSummary?.asset}</td>
                 <td>{company?.dealSummary?.profitLoss}</td>
                 <td>{val?.investedDate}</td>
-                <td>{currencyFormatter(val?.investors&&val?.investors?.find(v=>v.investerId===user?._id).amount)}</td>
+                <td>{currencyFormatter(val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount)}</td>
                 <td>{company?.dealSummary?.sector}</td>
                 <td>{val?.moic}</td>
-                <td><IrrVal initialInvestment={val?.investors&&val?.investors?.find(v=>v.investerId===user?._id).amount} investmentDate={val?.investedDate}  currentValue={val?.currentValue}/></td>
+                <td><IrrVal initialInvestment={val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount} investmentDate={val?.investedDate}  currentValue={val?.currentValue}/></td>
                 <td>{val?.weight}</td>
               </tr>
             ))}

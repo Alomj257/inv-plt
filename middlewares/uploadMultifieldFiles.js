@@ -37,8 +37,8 @@ const uploadMuiltiFieldFiles = (destination) => {
     upload.fields([
       { name: "cover" },
       { name: "profile" },
-      { name: "update" },
-      { name: "investDoc" },
+      { name: "update.update" },
+      { name: "investDoc.investDoc" },
     ])(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);

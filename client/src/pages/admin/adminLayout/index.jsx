@@ -6,16 +6,21 @@ import {  Outlet, useNavigate } from 'react-router-dom'
 import {  MdHome } from 'react-icons/md'
 import { FaBriefcase } from 'react-icons/fa'
 import { getAuth } from '../../../utils/authenticationHelper'
+import { getUserByIdService } from '../../../service/auth/AuthService'
 
 const AdminLayout = () => {
-  const isAdmin=getAuth()?.user?.account?.role==='ADMIN';
+  const userId=getAuth()?.user?._id;
   const navigate=useNavigate();
 
   useEffect(()=>{
-    if(!isAdmin){
-     navigate("/");
+   const handle=async()=>{
+    const detail=await getUserByIdService(userId);
+    if(detail?.account?.role!=="ADMIN"){
+      navigate("/");
     }
-  },[isAdmin])
+   }
+   handle();
+  },[userId])
 
   return (
     <>

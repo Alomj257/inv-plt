@@ -21,7 +21,6 @@ export const setAuth=(data)=>{
 export const logout=()=>{
     try {
         localStorage.removeItem("auth");
-        return <Navigate to="/"/>;
     } catch (error) {
       console.log(error)  
     }

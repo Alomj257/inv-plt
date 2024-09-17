@@ -16,7 +16,6 @@ exports.MemberMessage = (member) => {
     <h3>Account Information</h3>
     <ul>
       <li><strong>Email:</strong> ${member.account.email}</li>
-      <li><strong> Password:</strong> ${member.account.password}</li>
     </ul>
 
     <h3>Company Details</h3>
@@ -28,10 +27,10 @@ exports.MemberMessage = (member) => {
     <h3>Login Link</h3>
     <p>You can log in using the following link:</p>
    <button style="background-color: #007bff; border: none; padding: 10px 20px; border-radius: 25px;">
-  <a style="color: #ffffff; text-decoration: none; font-weight: bold;" href="http://localhost:5173/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}" target="_blank" rel="noopener noreferrer">Login Here</a>
+  <a style="color: #ffffff; text-decoration: none; font-weight: bold;" href="${process.env.url}/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}" target="_blank" rel="noopener noreferrer">Login Here</a>
 </button>
 <br>
-    <a style="color:"#0000FF" href="http://localhost:5173/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}" target="_blank" rel="noopener noreferrer">http://localhost:5173/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}</a>
+    <a style="color:"#0000FF" href="${process.env.url}/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}" target="_blank" rel="noopener noreferrer">${process.env.url}/?emailToken=${member?.member?.emailToken}&expiration=${member?.member?.expiration}</a>
 
     <p>Thank you for joining us, and we look forward to working together!</p>
     <p>If any of the above information is incorrect, please let us know as soon as possible.</p>

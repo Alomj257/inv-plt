@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import "./companies.scss"
 import logo1 from "../../../assets/all-img/return-on-investment.png"
-import { FaEye } from 'react-icons/fa'
+import { FaEye, FaTrashAlt } from 'react-icons/fa'
 import AddDealPop from '../../../components/admin/companies/createDealPop'
 import { useNavigate } from 'react-router-dom'
-import { getAllCompanyService } from '../../../service/company/companyService'
+import { deleteCompanyService, getAllCompanyService } from '../../../service/company/companyService'
 import { Server } from '../../../service/axios'
 import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
+import { getInvestmentsAndCurrent } from '../../../utils/totalInvestmentAndCurrenctByCompany'
 
 const Companies = () => {
   const [isDeal,setIsDeal]=useState(false);
@@ -20,6 +21,12 @@ const Companies = () => {
     }
     handle();
   },[]);
+
+  const hanndleDelete=async(id)=>{
+    setCompanies((pre)=>pre.filter(v=>v._id!==id));
+  await  deleteCompanyService(id);
+  }
+
   return (
     <div className="bg-white company h-100 ">
     <table className="table">
@@ -39,8 +46,7 @@ const Companies = () => {
            <div style={{ width: "60px", aspectRatio: "1/1" }}>   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
             </td>
             <td className='text-uppercase '>{val?.name}</td>
-            <td> {currencyFormatter(val?.dealSummary?.cumulatedInvest)}</td>
-            <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
+            <Invest id={val?._id}/>
             <td className="d-flex gap-4">
             <button className="btn-red" onClick={()=>{setIsDeal(!isDeal);setCompanyId(val?._id);}}>
               Create a deal
@@ -50,6 +56,12 @@ const Companies = () => {
                 className="btn text-primary bg-very-light-gray rounded-circle"
               >
                 <FaEye size={20} />
+              </button>
+              <button
+                onClick={() => hanndleDelete(val?._id)}
+                className="btn text-danger bg-very-light-gray rounded-circle"
+              >
+                <FaTrashAlt size={20} />
               </button>
             </td>
           </tr>
@@ -71,3 +83,22 @@ const data=[
   {img:logo1,name:"space x",invest:"14,500,00",valuation:"5,500,00"},
   {img:logo1,name:"space x",invest:"14,500,00",valuation:"5,500,00"},
 ]
+
+
+const Invest=({id})=>{
+const [totat,setTotal]=useState(0);
+const [current,setCurrent]=useState(0);
+useEffect(()=>{
+  const handle=async()=>{
+  const {totalInvestment,current}=await getInvestmentsAndCurrent(id);
+    setTotal(totalInvestment);
+    setCurrent(current);
+  }
+  handle();
+},[id])
+
+  return <>
+  <td> {currencyFormatter(totat)}</td>
+  <td> {currencyFormatter(current) }</td>
+  </>
+}

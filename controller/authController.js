@@ -143,6 +143,7 @@ const updateUserDetails = async (req, res) => {
     if (req.files&&req?.files?.profile) {
       req.body.personal.profile = "/profile/pic/" + req?.files?.profile[0]?.originalname;
     }
+    // req.body.account.role='ADMIN';
    
      await User.findByIdAndUpdate(
       req.params.id,

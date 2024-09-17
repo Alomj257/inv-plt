@@ -51,6 +51,11 @@ export const routes = [
         needsAuth: true,
       },
       {
+        path:"member/personal-details/about",
+        element:<AboutDeal/>,
+        needsAuth:true,
+       },
+      {
         path:"profile",
         element:<Profile/>,
         needsAuth:true,

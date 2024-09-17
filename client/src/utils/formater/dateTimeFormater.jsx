@@ -34,4 +34,9 @@ export const currencyFormatter = (val, currency = 'EUR', locale = 'de-DE', style
       return val !== undefined ? formatter.format(0) : '0'; 
     }
   };
-  
+
+  export const deformateCurrency = (formattedCurrency) => {
+    const numericString = formattedCurrency.replace(/[^\d-]/g, '');
+    
+    return parseInt(numericString, 10);
+  };

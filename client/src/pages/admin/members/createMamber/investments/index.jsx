@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { getAllDealByUserAndCompanyService } from '../../../../../service/deal/dealService';
 import { getByIdCompanyService } from '../../../../../service/company/companyService';
 import { getAuth } from '../../../../../utils/authenticationHelper';
+import { portfolioIrrParameter } from '../../../../../utils/calculationConversion';
+import { calculatePortfolioIrr } from '../../../../../utils/calculations/portfolioIrr';
+import DealListpop from '../../../../../components/customer/dealPop';
+import { Server } from '../../../../../service/axios';
+import { currencyFormatter } from '../../../../../utils/formater/dateTimeFormater';
 
 const Investments = ({userId}) => {
   const [company,setCompany]=useState([]);
@@ -34,7 +39,7 @@ const Investments = ({userId}) => {
               {company.length==0&& <h5 className='text-center text-muted'>No Any Investment  </h5>}
                 {company.length > 0 &&
                   company?.map((val, key) => (
-                    <Company deals={val?.deals} companyId={val?._id} index={key}/>
+                    <Company list={company} index={key} companyId={val?._id} userId={userId} deals={val?.deals}/>
                   ))}
               </tbody>
             </table>
@@ -45,36 +50,58 @@ const Investments = ({userId}) => {
 
 export default Investments;
 
-const Company=({companyId,index,deals})=>{
-const [company,setCompany]=useState(null);
-const user=getAuth()?.user;
-
-useEffect(()=>{
-  const getCompanyById=async()=>{
-    const data=await getByIdCompanyService(companyId);
-    setCompany(data);
-  }
-  getCompanyById();
-},[company])
-  return<>
-   <tr key={index} className="p-3 ">
-                      <td>
-                        <img src={company?.img} alt="" />
-                      </td>
-                      <td>{company?.name}</td>
-                      <td>{company?.dealSummary?.asset}</td>
-                      <td>{company?.dealSummary?.profitLoss}</td>
-                      <td>{company?.dealSummary?.sector}</td>
-                      <td>{company?.moic}</td>
-                      <td>{company?.totalInvet}</td>
-                      <td>{company?.irr}</td>
-                      <td className="d-flex gap-3">
-                        <button style={{cursor:user?.account?.role==='ADMIN'?"not-allowed":"pointer"}} disabled={user?.account?.role==='ADMIN'} className="btn-red bg-dark-orange">
-                          {deals?.length} Investments
-                        </button>
-                      </td>
-                    </tr>
-  </>
-}
+  
+const Company = ({ companyId,list, index, deals,userId }) => {
+  const [company, setCompany] = useState(null);
+  const [isDealList, setisDealList] = useState(false);
+  const [totalIvestMents,setTotalInvestMent]=useState(0);
+  const [irr,setIrr]=useState(0);
+  
 
 
+
+  useEffect(() => {
+    const getCompanyById = async () => {
+      const data = await getByIdCompanyService(companyId);
+      setCompany(data);
+      setTotalInvestMent(() => {
+        const totalDeals = deals.reduce((sum, item) => {
+          const investor=item?.investors?.find(v=>v.investerId===userId);
+          return sum + ( parseInt(investor?.amount || 0));
+        }, 0);
+        return totalDeals;
+      });
+      
+      const filteredList=list?.filter(v=>v._id===companyId);
+      const {totalCurrentValue, currentDate, investments}=portfolioIrrParameter(filteredList,userId);
+      if(totalCurrentValue&&currentDate&&investments){
+        setIrr(calculatePortfolioIrr(investments,currentDate,totalCurrentValue));
+      }
+
+    };
+    getCompanyById();
+  }, [companyId]);
+  return (
+    <>
+      <tr key={index} className="p-3 ">
+        <td>
+        <div className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
+        </td>
+        <td className='text-capitalize'>{company?.name}</td>
+        <td>{company?.dealSummary?.asset}</td>
+        <td>{company?.dealSummary?.profitLoss}</td>
+        <td>{company?.dealSummary?.sector}</td>
+        <td>{company?.moic}</td>
+        <td>{currencyFormatter(totalIvestMents)}</td>
+        <td>{irr}</td>
+        <td className="d-flex gap-3">
+          <button onClick={() => setisDealList(true)} className="btn-red">
+            {deals && deals?.length} Investments
+          </button>
+        </td>
+      </tr>
+      {isDealList && <DealListpop company={company} deals={deals} setIsNew={setisDealList} />}
+    </>
+  );
+};
+  

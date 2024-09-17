@@ -30,7 +30,7 @@ const AddDealPop = ({ setIsNew, companyId }) => {
   const handleChange = (index, event) => {
     const { name, value } = event.target;
     const newFields = fields.map((field, i) =>
-      i === index ? { ...field, [name]: name==='amount'?currencyFormatter(parseInt(value||0), currency?.currency, currency?.style): value } : field
+      i === index ? { ...field, [name]:  value } : field
     );
     setFields(newFields);
   };
@@ -41,7 +41,6 @@ const AddDealPop = ({ setIsNew, companyId }) => {
     await addDealService(newDeal);
     setIsNew(false);
   };
-console.log(currency);
 
   return (
     <div className="pop">
@@ -198,7 +197,7 @@ console.log(currency);
                   className="btn-red rounded-5 col-5"
                   onClick={handleAddField}
                 >
-                  Add an investment
+                  Add an investor
                 </button>
               </div>
             )}
