@@ -1,4 +1,4 @@
-import { deleteUserRepo, getAllUserByRoleRepo, getAllUsersRepo, getAuthByIdRepo, loginRepo, registerRepo, updateAuthRepo } from ".";
+import { deleteUserRepo, getAllUserByRoleRepo, getAllUsersRepo, getAuthByEmailRepo, getAuthByIdRepo, loginRepo, registerRepo, resendTokenRepo, updateAuthRepo } from ".";
 import { setAuth } from "../../utils/authenticationHelper";
 import { showToast } from "../../utils/toasters";
 
@@ -7,7 +7,22 @@ export  const registerService=async(val)=>{
         const {data}=await registerRepo(val);
         if(data?.message){
             showToast("error",data?.message);
-            return;
+            return data;
+        }
+        showToast("success",data);
+        return error?.response?.data;
+    } catch (error) {
+        showToast("error",error?.response?.data?.message);
+        return error?.response?.data;
+    }
+}
+
+export  const resendTokenService=async(val)=>{
+    try {
+        const {data}=await resendTokenRepo(val);
+        if(data?.message){
+            showToast("error",data?.message);
+            return data;
         }
         showToast("success",data);
     } catch (error) {
@@ -27,7 +42,7 @@ export  const loginService=async(val)=>{
         return data;
     } catch (error) {
         showToast("error",error?.response?.data?.message);
-        return;
+        return ;
     }
 }
 
@@ -41,12 +56,25 @@ export  const getUsersByRolesService=async(val)=>{
         return data;
     } catch (error) {
         showToast("error",error?.response?.data?.message);
+        return error?.response?.data;
     }
 }
 
 export  const getUserByIdService=async(id)=>{
     try {
         const {data}=await getAuthByIdRepo(id);
+        if(data?.message){
+            showToast("error",data?.message);
+            return;
+        }
+        return data;
+    } catch (error) {
+        showToast("error",error?.response?.data?.message);
+    }
+}
+export  const getUserByEmailService=async(email)=>{
+    try {
+        const {data}=await getAuthByEmailRepo(email);
         if(data?.message){
             showToast("error",data?.message);
             return;
@@ -74,12 +102,13 @@ export  const updateAuthService=async(id,val)=>{
         const {data}=await updateAuthRepo(id,val);
         if(data?.message){
             showToast("error",data?.message);
-            return;
+            return data;
         }
         showToast("success",data);
         return data;
     } catch (error) {
         showToast("error",error?.response?.data?.message);
+        return error?.response?.data;
     }
 }
 

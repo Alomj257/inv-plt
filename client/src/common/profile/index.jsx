@@ -3,7 +3,6 @@ import "./createMamber.scss";
 import { useLocation } from "react-router-dom";
 import { getUserByIdService,  updateAuthService } from "../../service/auth/AuthService";
 import { getAuth } from "../../utils/authenticationHelper";
-import profile from "../../assets/profile/comment_2.png";
 import { FaPen } from "react-icons/fa";
 import { Server } from "../../service/axios";
 const Profile = () => {
@@ -80,7 +79,7 @@ const Profile = () => {
             <div className="row">
                 <div className="profile d-flex justify-content-center ">
                     <div className="position-relative" style={{width:"150px",aspectRatio:"1/1"}}>
-                    <img src={(preview&&URL.createObjectURL(preview))||Server+member?.profile}   className="h-100 rounded-circle  w-100" alt="" />
+                    <img src={(preview&&URL.createObjectURL(preview))||Server+member?.profile}   className="h-100 text-very-light-gray rounded-circle  w-100" alt="" />
                   {isEdit&&  <label htmlFor="profile" className="position-absolute cursor-pointer" style={{bottom:"25%",right:"-10%"}}>
                         <input onChange={handleChange} type="file" name="profile" className="position-absolute" style={{opacity:0}} />
                        <div  className="bg-very-light-gray p-2 rounded-circle cursor-pointer  " ><FaPen size={25}/></div> 

@@ -8,16 +8,30 @@ export function formatTimeFromNow(dateTime) {
 }
 
 
-export const currencyFormatter=(val)=>{
-    try {
-        const euroFormatter = new Intl.NumberFormat('de-DE', {
-            style: 'currency',
-            currency: 'EUR',
-          });
-         return euroFormatter.format(val);
+// export const currencyFormatter=(val)=>{
+//     try {
+//         const euroFormatter = new Intl.NumberFormat('de-DE', {
+//             style: 'currency',
+//             currency: 'EUR',
+//           });
+//          return euroFormatter.format(val);
         
+//     } catch (error) {
+//         console.log(error)
+//       return  euroFormatter.format(0)
+//     }
+// }
+
+export const currencyFormatter = (val, currency = 'EUR', locale = 'de-DE', style = 'currency') => {
+    try {
+      const formatter = new Intl.NumberFormat(locale, {
+        style: style,          
+        currency: currency,     
+      });
+  
+      return formatter.format(val);
     } catch (error) {
-        console.log(error)
-      return  euroFormatter.format(0)
+      return val !== undefined ? formatter.format(0) : '0'; 
     }
-}
+  };
+  

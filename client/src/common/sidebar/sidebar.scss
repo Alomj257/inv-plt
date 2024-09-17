@@ -36,7 +36,7 @@ transition: all $time;
         display: flex;
         flex-direction: column;
         gap: 8px;
-        a{
+        a,button{
             padding:  10px;
             border: 2px solid transparent;
             width: 75%;

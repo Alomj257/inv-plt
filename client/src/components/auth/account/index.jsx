@@ -3,11 +3,13 @@ import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
 const Account = ({setAccount}) => {
   const [show,setShow]=useState("");
+  const [email,setEmail]=useState('');
   
   const handleChange=(e)=>{
     const {name,value}=e.target;
     setAccount(pre=>({...pre,[name]:value}))
   }
+ 
 
   return (
     <div className="row row-cols-md-2">

@@ -1,26 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./register.scss";
 import img from "../../assets/all-img/auth.png";
 import logo from "../../assets/all-img/Logo-02-removebg-preview.png";
 import Personal from "../../components/auth/personal";
 import Investment from "../../components/auth/investment";
 import Account from "../../components/auth/account";
-import { registerService } from "../../service/auth/AuthService";
+import { getUserByEmailService, registerService, resendTokenService, updateAuthService } from "../../service/auth/AuthService";
 import { IoIosArrowRoundForward } from "react-icons/io";
 import { showToast } from "../../utils/toasters";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Success from "../../components/auth/success";
 import AgreementPop from "../../components/auth/agreement";
 
 const Register = () => {
   const [step, setStep] = useState(0);
   const [subTask, setTask] = useState(0);
-  const naviagte=useNavigate();
   const [personal, setPersonal] = useState(null);
   const [account, setAccount] = useState(null);
   const [investVal, setInvestVal] = useState(null);
   const [isPop,setIspop]=useState(false);
-
+  const [params]=useSearchParams();
+    const emailToken=params.get('emailToken');
+    const expiration=params.get('expiration');
   const comps = [
     { com: <Personal setPersonal={setPersonal} /> },
     {
@@ -35,6 +36,12 @@ const Register = () => {
     },
     { com: <Account setAccount={setAccount} /> },
   ];
+  
+  useEffect(() => {
+    if (emailToken && expiration) {
+      setStep(1);
+    }
+  }, [emailToken, expiration]);
 
   const handleStep = () => {
     if(step===comps.length - 1&&!account.agreement){
@@ -57,19 +64,40 @@ const Register = () => {
   };
 
   const handleSubmit = async() => {
-    const data = {
+    let data = {
       personal: personal,
       investmentInfo: investVal,
       account: account,
     };
+
+    if(emailToken&&expiration&&account?.email){
+      const member=await getUserByEmailService(account?.email);
+      if(!member){
+        return showToast("error","sorry this mail not added by admin please contact");
+      }
+      data={member:{...member?.member,emailToken,expiration},account:{...member?.account,...account},personal:{...member?.personal,...personal},investmentInfo:{...member?.investmentInfo,...investVal}}
+    const msg=await  updateAuthService(member?._id,data);
+    if(msg?.message){
+      return;
+    }
+      // setStep(step+1);
+      return;
+    }
+
     if(data?.account&&data?.investmentInfo&&data?.account){
-       await     registerService(data);
+       const msg=await     registerService(data);
+       if(msg?.message){
+        return;
+      }
         setStep(step+1);
     }else{
         showToast("error","field Required")
     }
   };
 
+  const handleSend=()=>{
+    resendTokenService(account?.email);
+  }
 
 
 
@@ -111,12 +139,14 @@ const Register = () => {
                   </ul>
                 </div>
                 {comps[step].com}
+                {step==2&&emailToken&&expiration&& <button onClick={handleSend} className="btn text-white text-decoration-underline">Resend Link</button>}
               </div>
             </div>
           </div>
           <div className="col-md-10 mx-auto pb-3 mt-auto">
             <div className="col-md-10 mx-auto pe-0">
-              <button disabled={!personal} onClick={handleStep} className={`${step>=2?"btn-red":`btn-${!personal&&"dark"}-gray `} d-flex  py-2 rounded-5 w-100`}>
+         
+              <button disabled={!personal&&!emailToken&&!expiration} onClick={handleStep} className={`${step>=2?"btn-red":`btn-${!personal&&"dark"}-gray `} d-flex  py-2 rounded-5 w-100`}>
               <span className="mx-auto">{step>=2?" Confirm the registration":"Next"} </span> <span className="text-dark pe-3"><IoIosArrowRoundForward size={30}/></span>
               </button>
             </div>
@@ -136,7 +166,7 @@ const head = ["Personal info", "Investment info", "Account info"];
 const invest = [
   {
     head: " which asset classe(s) are you most interest to invest in?",
-    isSingle: true,
+    isSingle: false,
     isIcon: true,
     field: "interestedToInvest",
     option: [
@@ -183,7 +213,7 @@ const invest = [
   {
     head: "Which geographical regions are you most inclined to invest in?",
     field: "region",
-    isSingle: true,
+    isSingle: false,
     isIcon: true,
     option: [
       " North America",

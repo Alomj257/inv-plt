@@ -3,11 +3,13 @@ import "./pop.scss";
 import { BsX, BsPlus } from "react-icons/bs";
 import { addDealService } from "../../../../service/deal/dealService";
 import { getUsersByRolesService } from "../../../../service/auth/AuthService";
+import { currencyFormatter } from "../../../../utils/formater/dateTimeFormater";
 
 const AddDealPop = ({ setIsNew, companyId }) => {
   const [deal, setDeal] = useState({});
   const [fields, setFields] = useState([]);
-  const [investors,setInvestor]=useState([])
+  const [investors,setInvestor]=useState([]);
+  const [currency,setCurrency]=useState('');
   useEffect(()=>{
     const getUsers=async()=>{
       const data=await getUsersByRolesService("CUSTOMER")
@@ -28,7 +30,7 @@ const AddDealPop = ({ setIsNew, companyId }) => {
   const handleChange = (index, event) => {
     const { name, value } = event.target;
     const newFields = fields.map((field, i) =>
-      i === index ? { ...field, [name]: value } : field
+      i === index ? { ...field, [name]: name==='amount'?currencyFormatter(parseInt(value||0), currency?.currency, currency?.style): value } : field
     );
     setFields(newFields);
   };
@@ -39,7 +41,7 @@ const AddDealPop = ({ setIsNew, companyId }) => {
     await addDealService(newDeal);
     setIsNew(false);
   };
-
+console.log(currency);
 
   return (
     <div className="pop">
@@ -61,10 +63,21 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                   type="text"
                   name="valuation"
                   onChange={(e) =>
-                    setDeal({ ...deal, currentValue: e.target.value })
+                    setDeal({
+                      ...deal,
+                      currentValue: currencyFormatter(
+                        parseInt(e.target.value || 0),
+                        currency?.currency,
+                        currency?.style
+                      ),
+                    })
                   }
                   className="input-field"
-                  placeholder=" 4,500,000 €"
+                  placeholder={currencyFormatter(
+                    parseInt(53092),
+                    currency?.currency,
+                    currency?.style
+                  )}
                 />
               </div>
               <div className="field">
@@ -77,6 +90,26 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                   }
                   className="input-field"
                 />
+              </div>
+              <div className="field">
+                <label htmlFor="date">Currency</label>
+                <select
+                  onChange={(e) => setCurrency(JSON.parse(e.target.value))}
+                  name=""
+                  id=""
+                  className="input-field"
+                >
+                  <option
+                    value={JSON.stringify({ currency: "USD", style: "en-US" })}
+                  >
+                    US Dollar
+                  </option>
+                  <option
+                    value={JSON.stringify({ currency: "EUR", style: "en-EU" })}
+                  >
+                    Euro
+                  </option>
+                </select>
               </div>
             </div>
             {fields.map((field, index) => (
@@ -108,7 +141,11 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                     name="amount"
                     value={field.amount}
                     className="input-field"
-                    placeholder=" 500,000 €"
+                    placeholder={currencyFormatter(
+                      parseInt(5000),
+                      currency?.currency,
+                      currency?.style
+                    )}
                     onChange={(event) => handleChange(index, event)}
                   />
                 </div>

@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 
 export const getAuth=()=>{
     try {
@@ -20,7 +21,7 @@ export const setAuth=(data)=>{
 export const logout=()=>{
     try {
         localStorage.removeItem("auth");
-        return;
+        return <Navigate to="/"/>;
     } catch (error) {
       console.log(error)  
     }

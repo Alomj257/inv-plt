@@ -8,6 +8,7 @@ const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
   try {
+
     if (!req.body.account || !req.body.account.email) {
       return res.status(400).json({ message: "Email is required." });
     }
@@ -24,9 +25,13 @@ const register = async (req, res) => {
     if (password !== cnfPassword) {
       return res.status(401).json({ message: "Passwords do not match." });
     }
-
+    if(req.body?.member?.adminId){
+      const expiration=Date.now() + 5 * 60 * 1000;
+      req.body.member.emailToken=await bcrypt.hash(email,10);
+      req.body.member.expiration=expiration;
+      await sendEmail(MemberMessage(req.body),email,"Congratultions, Your account has been created by Anyma");
+    }
     const newUser = new User(req.body);
-    // await sendEmail(MemberMessage(newUser),email,"Congratultions, Your account has been created by Anyma");
     await newUser.save();
     res.status(201).json( "Your account is successfully created." );
   } catch (error) {
@@ -35,6 +40,25 @@ const register = async (req, res) => {
   }
 };
 
+const resendEmailToken=async(req,res)=>{
+  try {
+    const {email}=req.body;
+    console.log(req.body)
+    const user=await User.findOne({'account.email':email});
+    if(!user){
+      return res.status(404).json({message:"your email not found, please contact to admin"});
+    }
+    const expiration=Date.now() + 5 * 60 * 1000;
+    user.member.emailToken=await bcrypt.hash(email,10);
+    user.member.expiration=expiration;
+    await sendEmail(MemberMessage(user),email,"Congratultions, Your account has been created by Anyma");
+   await user.save();
+   res.status(200).json("Link has been sent to your email");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+}
 
 const login = async (req, res) => {
   try {
@@ -87,28 +111,61 @@ const getUserById = async (req, res) => {
   }
 };
 
+const getUserByEmail = async (req, res) => {
+  try {
+    const users = await User.findOne({'account.email':req.params.email});
+    res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const updateUserDetails = async (req, res) => {
   try {
-    const {account,personal}=req.body;
+    const {account,personal,member}=req.body;
+    let emailToken,expiration;
+    if(member){
+      emailToken=member?.emailToken;
+      expiration=member?.expiration;
+    }
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    if(account){
-      req.body.account=JSON.parse(account);
-    }
-    if(personal){
-      req.body.personal=JSON.parse(personal);
-    }
+      if(account&&typeof account==='string'){
+        req.body.account=JSON.parse(account);
+      }
+      if(personal&&typeof personal==='string'){
+        req.body.personal=JSON.parse(personal);
+      }
     
-    if (req.files) {
+    if (req.files&&req?.files?.profile) {
       req.body.personal.profile = "/profile/pic/" + req?.files?.profile[0]?.originalname;
     }
-    const updatedData = await User.findByIdAndUpdate(
+   
+     await User.findByIdAndUpdate(
       req.params.id,
       { $set: req.body },
       { new: true }
     );
+
+    if(emailToken&&expiration){
+      if (Date.now() > expiration) {
+        res.status(400).json({ message: "Token expired please resend token" });
+        return;
+      }
+        if(emailToken!==user?.member?.emailToken){
+          return res.json({message:"invalid email token !"});
+        }
+        if(req.body.account?.password!==req.body.account?.cnfPassword){
+          return res.json({message:"Password not matched !"});
+        }
+        user.account.password=req.body?.account?.password;
+        await  user.save();
+      }
+
+    // console.log(updatedData)
     res.status(200).json("User update successfully");
   } catch (error) {
     console.error(error);
@@ -244,4 +301,6 @@ module.exports = {
   setPassword,
   getAllUserByRoles,
   deleteUser,
+  getUserByEmail,
+  resendEmailToken
 };

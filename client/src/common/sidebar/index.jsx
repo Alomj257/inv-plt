@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./sidebar.scss";
 import logo from "../../assets/all-img/Logo-02-removebg-preview.png";
-import profile from "../../assets/profile/comment_2.png";
+import { IoMdLogOut } from "react-icons/io";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
-import { getAuth } from "../../utils/authenticationHelper";
+import { getAuth, logout } from "../../utils/authenticationHelper";
 import { Server } from "../../service/axios";
+import { getUserByIdService } from "../../service/auth/AuthService";
 
 const Sidebar = ({ sidebarData }) => {
-  const user = getAuth()?.user;
+  const userId = getAuth()?.user?._id;
+  const [user,setUser]=useState(null);
   const navigate = useNavigate();
   const [isClose, setIsClose] = useState(false);
   const { pathname } = useLocation();
   const paths = pathname.split("/");
   const path = paths[paths.length - 1];
+  useEffect(()=>{
+    const hande=async()=>{
+    const detial=await getUserByIdService(userId);
+    setUser(detial);
+    }
+    hande();
+  },[userId]);
+
   return (
     <div className={`sidebar-upper ${isClose ? "side-open" : ""}`}>
       <div className="sidebar">
@@ -64,7 +74,7 @@ const Sidebar = ({ sidebarData }) => {
               key={index}
               to={val?.soon?"":val.path}
               className={({ isActive }) =>
-                (isActive&&!val?.soon ? "active" : "") + `${val?.soon&&'not'} text-decoration-none`
+                (isActive&&!val?.soon ? "active" : "") + ` ${val?.soon&&'not'} text-decoration-none`
               }
             >
               <li>
@@ -94,6 +104,20 @@ const Sidebar = ({ sidebarData }) => {
               </li>
             </NavLink>
           ))}
+          <button onClick={()=>logout()} className="btn text-white  d-flex">
+              <li>
+                <span><IoMdLogOut/></span>
+                {!isClose && (
+                  <>
+                    <span
+                      className={`  position-relative`}
+                    >
+                     Logout
+                    </span>
+                  </>
+                )}
+              </li>
+              </button>
         </ul>
       </div>
     </div>

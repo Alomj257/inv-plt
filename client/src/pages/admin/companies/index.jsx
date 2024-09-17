@@ -39,7 +39,7 @@ const Companies = () => {
            <div style={{ width: "60px", aspectRatio: "1/1" }}>   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
             </td>
             <td className='text-uppercase '>{val?.name}</td>
-            <td> {currencyFormatter( val?.dealSummary?.cumulatedInvest)}</td>
+            <td> {currencyFormatter(val?.dealSummary?.cumulatedInvest)}</td>
             <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
             <td className="d-flex gap-4">
             <button className="btn-red" onClick={()=>{setIsDeal(!isDeal);setCompanyId(val?._id);}}>

@@ -69,7 +69,7 @@ useEffect(()=>{
                       <td>{company?.totalInvet}</td>
                       <td>{company?.irr}</td>
                       <td className="d-flex gap-3">
-                        <button style={{cursor:user?.account?.role==='ADMIN'?"not-allowed":"pointer"}} disabled={user?.account?.role==='ADMIN'} className="btn-red">
+                        <button style={{cursor:user?.account?.role==='ADMIN'?"not-allowed":"pointer"}} disabled={user?.account?.role==='ADMIN'} className="btn-red bg-dark-orange">
                           {deals?.length} Investments
                         </button>
                       </td>

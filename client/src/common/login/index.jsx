@@ -14,7 +14,9 @@ const Login = () => {
     const handleSubmit=async(e)=>{
       e.preventDefault();
       const data=await loginService(val);
-      console.log(data);
+      if(!data){
+        return;
+      }
       if(data&&data?.user?.account?.role==="ADMIN"){
         navigate("/admin");
       }else{

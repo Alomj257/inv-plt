@@ -4,7 +4,9 @@ import { useLocation } from "react-router-dom";
 import { getUserByIdService, registerService, updateAuthService } from "../../../../service/auth/AuthService";
 import { generateRandomPassword } from "../../../../utils/randomPassword";
 import Investments from "./investments";
+import { getAuth } from "../../../../utils/authenticationHelper";
 const CreateMamber = () => {
+  const user=getAuth()?.user;
   const {pathname,state}=useLocation();
   const paths=pathname.split("/");
   const [member,setMember]=useState(null);
@@ -36,7 +38,7 @@ const CreateMamber = () => {
       return;
     }
     const password=generateRandomPassword();
-    registerService({account:{...member ,password:password,cnfPassword:password},personal:{...member}});
+    registerService({member:{adminId:user?._id}, account:{...member ,password:password,cnfPassword:password},personal:{...member}});
   }
 
   return (
@@ -70,7 +72,7 @@ const CreateMamber = () => {
                         {val?.label}
                       </label>
                         <input
-                          type="text"
+                          type={val?.type==='date'?'date':"text"}
                           style={{
                             cursor: state
                               ? isEdit

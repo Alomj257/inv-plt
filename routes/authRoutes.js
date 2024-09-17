@@ -10,6 +10,8 @@ const {
   setPassword,
   getAllUserByRoles,
   deleteUser,
+  getUserByEmail,
+  resendEmailToken,
 } = require("../controller/authController");
 const uploadMuiltiFieldFiles = require("../middlewares/uploadMultifieldFiles");
 
@@ -21,6 +23,8 @@ AuthRoutes.delete("/delete/:id", deleteUser);
 AuthRoutes.get("/users/role/:role", getAllUserByRoles);
 AuthRoutes.get("/users", getAllUsers);
 AuthRoutes.get("/users/:id", getUserById);
+AuthRoutes.get("/users/email/:email", getUserByEmail);
+AuthRoutes.post("/users/email", resendEmailToken);
 AuthRoutes.get("/logout", logout);
 AuthRoutes.post("/forget", sendOtp);
 AuthRoutes.post("/otp-verification", verifyOTP);

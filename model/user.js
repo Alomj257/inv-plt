@@ -56,7 +56,13 @@ const userSchema = new mongoose.Schema(
         enum: ["ADMIN", "CUSTOMER"],
         default: "CUSTOMER", 
       },
-      isEnable:Boolean
+      isEnable:Boolean,
+    },
+    member:{
+      emailToken:String,
+      expiration:Date,
+      verifyEmail:Boolean,
+      adminId:{type:mongoose.Types.ObjectId,ref:"User"},
     },
     forget: {
       otp: String,
@@ -84,6 +90,7 @@ userSchema.pre("save", async function (next) {
 });
 
 userSchema.methods.comparePassword = async function (password) {
+  console.log(await bcrypt.compare(password, this.account.password))
   return await bcrypt.compare(password, this.account.password);
 };
 
