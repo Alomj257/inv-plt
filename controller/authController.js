@@ -31,6 +31,7 @@ const register = async (req, res) => {
       req.body.member.expiration=expiration;
       await sendEmail(MemberMessage(req.body),email,"Congratultions, Your account has been created by Anyma");
     }
+    // req.body.account.role='ADMIN';
     const newUser = new User(req.body);
     await newUser.save();
     res.status(201).json( "Your account is successfully created." );
