@@ -5,6 +5,7 @@ import { FaPencil, FaRegFileLines } from "react-icons/fa6";
 import AddNewsPop from "../../../../components/admin/companies/addNewsPop";
 import {
   addCompanyService,
+  downloadFileService,
   getByIdCompanyService,
   updateCompanyService,
 } from "../../../../service/company/companyService";
@@ -29,8 +30,6 @@ const NewCompany = () => {
   const [investDoc, setInvestDoc] = useState([]);
   const [updateFileName, setUpdateFileName] = useState([]);
   const [investFileName, setInvestFileName] = useState([]);
-  const [totalInvestments,setInvestments]=useState(0);
-  const [current,setCurrent]=useState(0);
 
   // const [updateFileList,setUpdateFile]=useState([])
   // const [investFileList,setInvestFile]=useState([])
@@ -56,8 +55,7 @@ const NewCompany = () => {
     const handle=async()=>{
       if(company?._id){
     const {totalInvestment,current}=await getInvestmentsAndCurrent(company?._id);
-    setDeal({...deal,cumulatedInvest:totalInvestment,
-      currentValuation:current})
+    setDeal({...deal,cumulatedInvest:totalInvestment})
     }
   }
     handle();
@@ -105,6 +103,7 @@ const NewCompany = () => {
     }
   };
 
+  // console.log(investDoc,updateDoc)
   const handleInvestDoc = (e) => {
     try {
       const { name, files } = e.target;
@@ -147,8 +146,16 @@ const NewCompany = () => {
     }
     formData.append("dealSummary", JSON.stringify(deal));
     formData.append("news", JSON.stringify(news));
-    formData.append("update", updateDoc);
-    formData.append("investDoc", investDoc);
+    // formData.append("update", updateDoc);
+    // formData.append("investDoc", investDoc);
+    console.log(updateDoc,investDoc);
+    updateDoc.forEach((doc) => {
+      formData.append("update", doc['updatedoc']); 
+    });
+  
+    investDoc.forEach((doc) => {
+      formData.append("investDoc", doc['investDoc']);
+    });
     if (state) {
       await updateCompanyService(state, formData);
       navigate(-1);
@@ -158,11 +165,11 @@ const NewCompany = () => {
     navigate(-1);
   };
 
+  const downloadFile=(file)=>{
+    downloadFileService(file);
+  }
 
-
-  
-
-
+console.log(company)
 
   return (
     <form action="" onSubmit={handleSubmit}>
@@ -248,7 +255,7 @@ const NewCompany = () => {
                       isAbout ? "Enter description" : "click on edit button."
                     }  `}
                     className="w-100 border pb-0 bg-white rounded p-3"
-                    rows={5}
+                    rows={7}
                     id=""
                   ></textarea>
                 </div>
@@ -266,7 +273,7 @@ const NewCompany = () => {
                     <FaPencil size={20} />
                   </div>
                 </div>
-                <div className="deal-list px-4  h-100 py-4 pb-5 rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
+                <div className="deal-list px-4  h-100 py-4  rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
                   {data?.map((val, index) => (
                     <div key={index}>
                       <label htmlFor={val?.name} className="text-muted small">
@@ -368,10 +375,10 @@ const NewCompany = () => {
                             <FaRegFileLines className="text-muted" size={20} />
                           </div>
                           <div className="d-flex flex-column gap-1">
-                            <small className="text-muted">
+                            <small  onClick={()=>downloadFile(val?.originalname)} className="text-muted cursor-pointer">
                               
                               {
-                                updateFileName.find((v) => v?.id === val?.id)
+                               val?.originalname|| updateFileName.find((v) => v?.id === val?.id)
                                   ?.name||'CONTRACT UPDATE'
                               }
                             </small>
@@ -395,7 +402,7 @@ const NewCompany = () => {
                     <div className="fw-semibold">INVESTMENT DOCS</div>
                     <input
                       type="file"
-                      name="updatedoc"
+                      name="investDoc"
                       onChange={handleInvestDoc}
                       style={{ opacity: "0" }}
                       className="position-absolute"
@@ -418,9 +425,9 @@ const NewCompany = () => {
                             <FaRegFileLines className="text-muted" size={25} />
                           </div>
                           <div className="d-flex flex-column gap-1">
-                            <small className="text-muted">
+                            <small onClick={()=>downloadFile(val?.originalname)} className="text-muted cursor-pointer">
                               {
-                                investFileName.find((v) => v?.id === val?.id)
+                              val?.originalname ||  investFileName.find((v) => v?.id === val?.id)
                                   ?.name||'CONTRACT UPDATE'
                               }
                             </small>

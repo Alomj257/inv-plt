@@ -1,4 +1,5 @@
 const Company = require("../model/company");
+const path = require('path');
 
 exports.createCompany=async(req,res)=>{
     try {
@@ -8,13 +9,6 @@ exports.createCompany=async(req,res)=>{
         if(req.body.news){
         req.body.news=JSON.parse(req.body.news);
         }
-        // if(req.body.update){
-        //   console.log(req.body.update)
-        // req.body.update=JSON.parse(req.body.update);
-        // }
-        // if(req.body.investDoc){
-        // req.body.investDoc=JSON.parse(req.body.investDoc);
-        // }
               if (req.files) {
                 if (req.files.cover && req.files.cover[0]) {
                   req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
@@ -32,6 +26,8 @@ exports.createCompany=async(req,res)=>{
                   req.body.update = req.files.update.map((file, index) => ({
                     ...file,
                     updatedoc: "/company/update/" + file.originalname,
+                    date: Date.now(),
+                    id:index
                   }));
                 }
               
@@ -39,6 +35,8 @@ exports.createCompany=async(req,res)=>{
                   req.body.investDoc = req.files.investDoc.map((file, index) => ({
                     ...file,
                     updatedoc: "/company/investDoc/" + file.originalname,
+                    date: Date.now(),
+                    id:index
                   }));
                 }
               }
@@ -65,14 +63,9 @@ exports.updateCompany=async(req,res)=>{
           req.body.dealSummary=JSON.parse(req.body.dealSummary);
           }
           if(req.body.news){
-          req.body.news=JSON.parse(req.body.news);
+          req.body.news=JSON.parse(req.body.news||'');
           }
-          // if(req.body.update){
-          // req.body.update=JSON.parse(req.body.update);
-          // }
-          // if(req.body.investDoc){
-          // req.body.investDoc=JSON.parse(req.body.investDoc);
-          // }
+          console.log(req.files)
           if (req.files) {
             if (req.files.cover && req.files.cover[0]) {
               req.body.cover = "/company/cover/" + req.files.cover[0].originalname;
@@ -101,6 +94,23 @@ exports.updateCompany=async(req,res)=>{
             }
           }
         await Company.findByIdAndUpdate(req.params.id,req.body,{new:true});
+        res.status(200).json("Company update Successfully");
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({messsage:"something went wrong!"});
+    }
+}
+
+exports.updateWithoutFile=async(req,res)=>{
+    try {
+      const {investDate,currentValuation}=req.body;
+        const company=await Company.findById(req.params.id);
+        if(!company){
+            return res.status(403).json({message:'Company Id invalid '});
+        }
+        company.dealSummary.investDate=investDate;
+        company.dealSummary.currentValuation=currentValuation;
+       await   company.save();
         res.status(200).json("Company update Successfully");
     } catch (error) {
         console.log(error);
@@ -303,3 +313,18 @@ exports.deleteInvestDoc = async (req, res) => {
       res.status(500).json({ message: "Something went wrong!" });
     }
   };
+  exports.downloadFile=async(req,res)=>{
+    try {
+      const fileName = req.params.fileName;
+      const fileDirectory = path.join(__dirname, '../public/company'); 
+      const filePath = path.join(fileDirectory, fileName);
+      res.download(filePath, (err) => {
+        if (err) {
+          return res.status(404).send({ message: "File not found!" });
+        }
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Something went wrong!" });
+    }
+  }

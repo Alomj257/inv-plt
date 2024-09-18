@@ -15,7 +15,10 @@ const uploadMuiltiFieldFiles = (destination) => {
       file.mimetype === "image/jpeg" ||
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
-      file.mimetype === "image/gif"
+      file.mimetype === "image/gif"||
+      file.mimetype === "application/pdf" ||  
+    file.mimetype === "application/msword" ||
+    file.mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
     ) {
       cb(null, true);
     } else {
@@ -37,8 +40,8 @@ const uploadMuiltiFieldFiles = (destination) => {
     upload.fields([
       { name: "cover" },
       { name: "profile" },
-      { name: "update.update" },
-      { name: "investDoc.investDoc" },
+      { name: "update",maxCount:10 },
+      { name: "investDoc",maxCount:10 },
     ])(req, res, function (err) {
       if (err instanceof multer.MulterError) {
         console.log(err);

@@ -26,8 +26,8 @@ const Investments = ({userId}) => {
                 <tr>
                   <th scope="col text-uppercase "> </th>
                   <th scope="col text-uppercase "> COMPANY</th>
-                  <th scope="col text-uppercase ">Asset Class</th>
-                  <th scope="col text-uppercase ">Net Profit(Loss)</th>
+                  <th scope="col text-uppercase ">ASSET CLASS</th>
+                  <th scope="col text-uppercase ">NET PROFIT(LOSS)</th>
                   <th scope="col text-uppercase ">SECTOR</th>
                   <th scope="col text-uppercase ">NET MOIC</th>
                   <th scope="col text-uppercase ">TOTAL INVESTMENT</th>

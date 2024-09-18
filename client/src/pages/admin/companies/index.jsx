@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import "./companies.scss"
-import logo1 from "../../../assets/all-img/return-on-investment.png"
 import { FaEye, FaTrashAlt } from 'react-icons/fa'
 import AddDealPop from '../../../components/admin/companies/createDealPop'
 import { useNavigate } from 'react-router-dom'
@@ -47,6 +46,7 @@ const Companies = () => {
             </td>
             <td className='text-uppercase '>{val?.name}</td>
             <Invest id={val?._id}/>
+            <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
             <td className="d-flex gap-4">
             <button className="btn-red" onClick={()=>{setIsDeal(!isDeal);setCompanyId(val?._id);}}>
               Create a deal
@@ -76,14 +76,6 @@ const Companies = () => {
 export default Companies
 
 
-const data=[
-  {img:logo1,name:"space x",invest:"14,500,00",valuation:"5,500,00"},
-  {img:logo1,name:" pakpot",invest:"14,500,00",valuation:"5,500,00"},
-  {img:logo1,name:"versori",invest:"14,500,00",valuation:"5,500,00"},
-  {img:logo1,name:"space x",invest:"14,500,00",valuation:"5,500,00"},
-  {img:logo1,name:"space x",invest:"14,500,00",valuation:"5,500,00"},
-]
-
 
 const Invest=({id})=>{
 const [totat,setTotal]=useState(0);
@@ -99,6 +91,5 @@ useEffect(()=>{
 
   return <>
   <td> {currencyFormatter(totat)}</td>
-  <td> {currencyFormatter(current) }</td>
   </>
 }

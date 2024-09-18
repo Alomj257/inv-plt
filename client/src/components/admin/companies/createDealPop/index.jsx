@@ -3,13 +3,25 @@ import "./pop.scss";
 import { BsX, BsPlus } from "react-icons/bs";
 import { addDealService } from "../../../../service/deal/dealService";
 import { getUsersByRolesService } from "../../../../service/auth/AuthService";
-import { currencyFormatter } from "../../../../utils/formater/dateTimeFormater";
+import { currencyFormatter, deformateCurrency } from "../../../../utils/formater/dateTimeFormater";
+import { getByIdCompanyService,    updateCompanyWithoutService } from "../../../../service/company/companyService";
 
 const AddDealPop = ({ setIsNew, companyId }) => {
+
   const [deal, setDeal] = useState({});
   const [fields, setFields] = useState([]);
   const [investors,setInvestor]=useState([]);
   const [currency,setCurrency]=useState('');
+  const [company,setComapany]=useState('');
+
+  useEffect(()=>{
+    const handle=async()=>{
+      const data=await getByIdCompanyService(companyId);
+      setComapany(data);
+    }
+    handle();
+  },[companyId]);
+
   useEffect(()=>{
     const getUsers=async()=>{
       const data=await getUsersByRolesService("CUSTOMER")
@@ -29,19 +41,45 @@ const AddDealPop = ({ setIsNew, companyId }) => {
 
   const handleChange = (index, event) => {
     const { name, value } = event.target;
-    const newFields = fields.map((field, i) =>
-      i === index ? { ...field, [name]:  value } : field
-    );
+    
+    const newFields = fields.map((field, i) => {
+      if (i === index) {
+        // First, update the field with the new value
+        const updatedField = {
+          ...field,
+          [name]: value
+        };
+        const amount = parseInt(updatedField['amount'] || 0);
+        const entryFee = parseInt(updatedField['entryFee'] || 0);
+        const carried = parseInt(updatedField['carried'] || 0);
+        updatedField.fees = (amount * (entryFee + carried)) / 100;
+        return updatedField;
+      }
+      
+      return field;
+    });
+  
     setFields(newFields);
   };
+  
   
   const handleDeal = async (e) => {
     e.preventDefault();
     const newDeal = { ...deal, investors: fields, companyId };
+
+    let investDate;
+
+    if(!company.dealSummary||!company.dealSummary.investDate){
+     investDate= deal?.investedDate;
+    }else{
+      investDate=company?.dealSummary.investDate;
+    }
+
+    await updateCompanyWithoutService(companyId,{investDate:investDate,currentValuation:deal?.currentValue});
     await addDealService(newDeal);
     setIsNew(false);
   };
-
+console.log(fields);
   return (
     <div className="pop">
       <div className="pop-body col-8 pb-5">
@@ -61,16 +99,12 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                 <input
                   type="text"
                   name="valuation"
+                  value={deal?.currentValue}
                   onChange={(e) =>
                     setDeal({
                       ...deal,
-                      currentValue: currencyFormatter(
-                        parseInt(e.target.value || 0),
-                        currency?.currency,
-                        currency?.style
-                      ),
-                    })
-                  }
+                      currentValue: e.target.value
+                  })}
                   className="input-field"
                   placeholder={currencyFormatter(
                     parseInt(53092),
@@ -98,15 +132,15 @@ const AddDealPop = ({ setIsNew, companyId }) => {
                   id=""
                   className="input-field"
                 >
-                  <option
-                    value={JSON.stringify({ currency: "USD", style: "en-US" })}
-                  >
-                    US Dollar
-                  </option>
-                  <option
-                    value={JSON.stringify({ currency: "EUR", style: "en-EU" })}
+                   <option
+                    value={JSON.stringify({ currency: "EUR" })}
                   >
                     Euro
+                  </option>
+                  <option
+                    value={JSON.stringify({ currency: "USD" })}
+                  >
+                    US Dollar
                   </option>
                 </select>
               </div>

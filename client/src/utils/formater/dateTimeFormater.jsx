@@ -22,14 +22,13 @@ export function formatTimeFromNow(dateTime) {
 //     }
 // }
 
-export const currencyFormatter = (val, currency = 'EUR', locale = 'de-DE', style = 'currency') => {
+export const currencyFormatter = (val, currency = 'EUR', style = 'currency') => {
     try {
-      const formatter = new Intl.NumberFormat(locale, {
-        style: style,          
-        currency: currency,     
-      });
-  
-      return formatter.format(val);
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 2,
+      }).format(val);
     } catch (error) {
       return val !== undefined ? formatter.format(0) : '0'; 
     }

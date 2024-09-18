@@ -1,4 +1,4 @@
-import { addCompanyRepo, addDocRepo, addInvestDocRepo, addNewsRepo, deleteCompanyRepo, deleteDocRepo, deleteInvestDocRepo, deleteNewsRepo, getAllCompanyRepo, getByIdCompanyRepo, updateCompanyRepo } from ".";
+import { addCompanyRepo, addDocRepo, addInvestDocRepo, addNewsRepo, deleteCompanyRepo, deleteDocRepo, deleteInvestDocRepo, deleteNewsRepo, downloadFileRepo, getAllCompanyRepo, getByIdCompanyRepo, updateCompanyRepo, updateCompanyWitoutRepo } from ".";
 import { showToast } from "../../utils/toasters";
 
 export const  addCompanyService=async(val)=>{
@@ -17,6 +17,19 @@ try {
 export const  updateCompanyService=async(id,val)=>{
 try {
     const {data}=await updateCompanyRepo(id,val);
+    if(data?.message){
+        return showToast("error",data?.message);
+    }
+    showToast("success",data);
+} catch (error) {
+    console.log(error);
+    showToast("error",error?.response?.data?.messsage);
+}
+}
+
+export const  updateCompanyWithoutService=async(id,val)=>{
+try {
+    const {data}=await updateCompanyWitoutRepo(id,val);
     if(data?.message){
         return showToast("error",data?.message);
     }
@@ -152,6 +165,22 @@ try {
         return showToast("error",data?.message);
     }
     showToast("error",data);
+} catch (error) {
+    console.log(error);
+    showToast("error",error?.response?.data?.messsage);
+}
+}
+
+export const  downloadFileService=async(file)=>{
+try {
+          const response = await downloadFileRepo(file);
+          const blob = new Blob([response.data], { type: response.headers['content-type'] });
+          const link = document.createElement('a');
+          link.href = window.URL.createObjectURL(blob);
+          link.download = file;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
 } catch (error) {
     console.log(error);
     showToast("error",error?.response?.data?.messsage);

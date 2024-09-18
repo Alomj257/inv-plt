@@ -20,6 +20,7 @@ const companySchema=new mongoose.Schema({
         asset:String,
         investDate:String,
         sector:String,
+        currentValuation:String,
     },
     news:Array,
     update:Array,

@@ -25,7 +25,7 @@ const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
    {name:"  CURRENT VALUATION",qty:currencyFormatter(0),icon:valuation},
    {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
-   {name:"  NET MOIC",qty:"12%",icon:moic},
+   {name:"  NET MOIC",qty:"0%",icon:moic},
    {name:" NET PROFIT (LOSS)",qty:currencyFormatter(0),icon:profit},
    {name:"  NET IRR",qty:irrVal,icon:irr},
   ];

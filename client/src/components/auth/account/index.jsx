@@ -49,8 +49,8 @@ const Account = ({setAccount}) => {
 export default Account;
 
 const fieldData = [
-  { place: " Domingue.thomas@gmail.com", type: "input", name: "email", label: " E-mail address (username)" },
-  { place: "07754838908", type: "input", name: "phone", label: "Phone number" },
+  { place: "alessandro@anyma.capital", type: "input", name: "email", label: " E-mail address (username)" },
+  { place: "0033623587116", type: "input", name: "phone", label: "Phone number" },
   { place: "*******", type: "password", name: "password", label: "Password" },
   { place: "*******", type: "password", name: "cnfPassword", label: "Repeat password" },
  

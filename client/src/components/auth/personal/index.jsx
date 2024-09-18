@@ -57,8 +57,8 @@ export default Personal;
 
 
 const fieldData = [
-  { place: "First ", type: "input", name: "firstName", label: "First name" },
-  { place: "", type: "input", name: "lastName", label: "Last name" },
+  { place: "Alessandro ", type: "input", name: "firstName", label: "First name" },
+  { place: "Santero", type: "input", name: "lastName", label: "Last name" },
   {
     place: "Paris, France",
     type: "input",

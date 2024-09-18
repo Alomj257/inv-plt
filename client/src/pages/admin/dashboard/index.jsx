@@ -106,7 +106,7 @@ const Deals = ({ userId }) => {
 
   return (
     <>
-      <td>{investment}</td>
+      <td>{investment} Investments</td>
       <td>{currencyFormatter(amount)}</td>
     </>
   );
