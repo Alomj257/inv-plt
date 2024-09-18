@@ -7,6 +7,8 @@ import { calculatePortfolioIrr } from '../../../../../utils/calculations/portfol
 import DealListpop from '../../../../../components/customer/dealPop';
 import { Server } from '../../../../../service/axios';
 import { currencyFormatter } from '../../../../../utils/formater/dateTimeFormater';
+import NetProfit from './values/netProfit';
+import Moic from './values/netmoic';
 
 const Investments = ({userId}) => {
   const [company,setCompany]=useState([]);
@@ -52,18 +54,18 @@ export default Investments;
 
   
 const Company = ({ companyId,list, index, deals,userId }) => {
-  const [company, setCompany] = useState(null);
+  const [company, setCompany] = useState({});
   const [isDealList, setisDealList] = useState(false);
   const [totalIvestMents,setTotalInvestMent]=useState(0);
+  const [currentValuation,setCurrentValuation]=useState(0);
   const [irr,setIrr]=useState(0);
-  
-
-
 
   useEffect(() => {
+  
     const getCompanyById = async () => {
       const data = await getByIdCompanyService(companyId);
       setCompany(data);
+      setCurrentValuation(data?.dealSummary?.currentValuation);
       setTotalInvestMent(() => {
         const totalDeals = deals.reduce((sum, item) => {
           const investor=item?.investors?.find(v=>v.investerId===userId);
@@ -80,7 +82,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
 
     };
     getCompanyById();
-  }, [companyId]);
+  }, [companyId,deals]);
   return (
     <>
       <tr key={index} className="p-3 ">
@@ -89,9 +91,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
         </td>
         <td className='text-capitalize'>{company?.name}</td>
         <td>{company?.dealSummary?.asset}</td>
-        <td>{company?.dealSummary?.profitLoss}</td>
-        <td>{company?.dealSummary?.sector}</td>
-        <td>{company?.moic}</td>
+        <NetProfit deals={deals} userId={userId} currentValuation={currentValuation} sector={company?.dealSummary?.sector} />
         <td>{currencyFormatter(totalIvestMents)}</td>
         <td>{irr}</td>
         <td className="d-flex gap-3">
@@ -100,7 +100,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
           </button>
         </td>
       </tr>
-      {isDealList && <DealListpop company={company} deals={deals} setIsNew={setisDealList} />}
+      {isDealList && <DealListpop userId={userId} company={company} deals={deals} setIsNew={setisDealList} />}
     </>
   );
 };

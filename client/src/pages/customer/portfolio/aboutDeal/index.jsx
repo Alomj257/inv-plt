@@ -6,7 +6,8 @@ import { FaRegFileLines } from 'react-icons/fa6'
 import { useLocation } from 'react-router-dom'
 import { getByIdCompanyService } from '../../../../service/company/companyService'
 import { Server } from '../../../../service/axios'
-import { formatTimeFromNow } from '../../../../utils/formater/dateTimeFormater'
+import { currencyFormatter, formatTimeFromNow } from '../../../../utils/formater/dateTimeFormater'
+import { getInvestmentsAndCurrent } from '../../../../utils/totalInvestmentAndCurrenctByCompany'
 
 const AboutDeal = () => {
     const {state}=useLocation();
@@ -15,11 +16,11 @@ const AboutDeal = () => {
     useEffect(()=>{
         const getCompanyById=async()=>{
             const data=await getByIdCompanyService(state);
-            setCompany(data);
+            const {totalInvestment,current}=await getInvestmentsAndCurrent(company?._id);
+            setCompany({...data,dealSummary:{...data?.dealSummary,cumulatedInvest:totalInvestment}});
         }
         getCompanyById();
     },[state]);
-
 
     return (
       <div className='new-company'>
@@ -39,28 +40,34 @@ const AboutDeal = () => {
                       <div className="about col-md-8 d-flex bg-dark text-white my-3 py-2 border border-2 rounded px-3 justify-content-between align-items-center">
                           <div className='fw-semibold text-uppercase'>ABOUT {company?.name}</div>
                       </div>
-                      <div className='border p-2 rounded bg-white'>
-                        <p>{company?.about}</p>
+                      <div className=' '>
+                         <textarea
+                    value={company?.about}
+                    disabled
+                    className="w-100 border pb-0 bg-white rounded p-3"
+                    rows={6}
+                    id=""
+                  ></textarea>
                       </div>
                   </div>
               </div>
               <div className="col-3 h-100 d-flex flex-column">
                   <div className="deal d-flex flex-column h-100">
-                  <div className="about d-flex bg-black  text-white my-3 py-1 border border-2 rounded px-2 justify-content-between align-items-center">
+                  <div className="about d-flex bg-black  text-white mb-3 py-2 border border-2 rounded px-2 justify-content-between align-items-center">
                           <div className='fw-semibold'>DEAL SUMMARY</div>
                       </div>
-                      <div className="deal-list px-4 h-100 py-4 pb-5 rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
+                      <div className="deal-list px-4 h-100 py-3 pb-2  rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
                          {data?.map((val,index)=>( <div  key={index}>
-                              <label htmlFor="" className='text-muted'>{val?.name}</label>
-                              <div className='fw-bold'>{company?.dealSummary&&company?.dealSummary[val?.field]}</div>
+                              <label htmlFor="" className='text-muted'>{val?.label}</label>
+                              <div className='fw-bold'>{(company?.dealSummary&&money?.includes(val?.name)?currencyFormatter(company?.dealSummary[val?.name]):company?.dealSummary[val?.name])||"-"}</div>
                           </div>))}
                       </div>
                   </div>
   
               </div>
           </div>
-          <div className="row pb-3">
-              <div className="col-md-6">
+          <div className="row pb-3 pe-0">
+              <div className="col-md-6 ">
               <div className=" d-flex bg-black text-white my-3 py-2 border border-2 rounded px-3 justify-content-between align-items-center">
                           <div className='fw-semibold'>Latest News</div>
                       </div>
@@ -73,7 +80,7 @@ const AboutDeal = () => {
   
                       </div>
               </div>
-              <div className="col-md-6 row">
+              <div className="col-md-6 row pe-0">
                   <div className="col-6">
                       <div>   <div className=" d-flex bg-black text-white my-3 py-2 border border-2 rounded px-3 justify-content-between align-items-center">
                           <div className='fw-semibold'>UPDATE</div>
@@ -89,7 +96,7 @@ const AboutDeal = () => {
                       ))}
                       </div></div>
                   </div>
-                  <div className="col-6">
+                  <div className="col-6 pe-0 ps-3">
                       <div>   <div className=" d-flex bg-black text-white my-3 py-2 border border-2 rounded px-3 justify-content-between align-items-center">
                           <div className='fw-semibold'> INVESTMENT DOCS
                           </div>
@@ -115,10 +122,14 @@ const AboutDeal = () => {
 
 export default AboutDeal;
 
-const data=[
-    {name:"ASSET className",field:'asset'},
-    {name:"NVESTMENT DATE",field:'investDate'},
-    {name:"CUMULATED INVESTMENTS",field:'cumulatedInvest'},
-    {name:"CURRENT VALUATION",field:"currentValuation"},
-    {name:"TOTAL PROFIT (LOSS)",field:'profitLoss'},
-]
+const data = [
+    { name: "asset", label: "ASSET CLASS" ,type:"input"},
+    { name: "investDate", label: "INVESTMENT DATE",type:"input" },
+    { name: "sector", label: "SECTOR",type:"input" },
+    { name: "cumulatedInvest", label: "CUMULATED INVESTMENTS", },
+    { name: "currentValuation", label: "CURRENT VALUATION" },
+    { name: "profitLoss", label: "TOTAL PROFIT (LOSS)" },
+  ];
+  
+  
+  const money = ["cumulatedInvest", "currentValuation", "profitLoss"];

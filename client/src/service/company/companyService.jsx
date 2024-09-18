@@ -55,13 +55,16 @@ try {
 
 export const  getByIdCompanyService=async(id)=>{
 try {
+    if(!id){
+        return;
+    }
     const {data}=await getByIdCompanyRepo(id);
     if(data?.message){
         return showToast("error",data?.message);
     }
     return data;
 } catch (error) {
-    console.log(error);
+    console.log(error?.response?.data?.messsage);
     showToast("error",error?.response?.data?.messsage);
 }
 }

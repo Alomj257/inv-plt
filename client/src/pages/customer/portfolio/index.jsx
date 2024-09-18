@@ -13,6 +13,8 @@ import { getAuth } from '../../../utils/authenticationHelper'
 import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
 import { portfolioIrrParameter } from '../../../utils/calculationConversion'
 import { calculatePortfolioIrr } from '../../../utils/calculations/portfolioIrr'
+import NetProfit from '../../admin/members/createMamber/investments/values/netProfit'
+
 const Portfolio = () => {
   const [company,setCompany]=useState([]);
   const [totalInvestments,setTotalInvestment]=useState(0);
@@ -45,7 +47,7 @@ const fieldData = [
             const investor = deal?.investors?.find(
               (v) => v?.investerId === userId
             );
-            return dealSum + parseInt(investor?.amount || 0);
+            return dealSum + parseInt(investor?.amount || 0)+parseInt(investor?.fees||0);
           }, 0);
           return sum + dealSum;
         }, 0);
@@ -61,12 +63,11 @@ const fieldData = [
         );
         setIrr(ans);
       }
-
       setCompany(data);
     }
     getCompany();
   },[userId])
-  console.log(company)
+
   return (
     <>
     {/* overview */}
@@ -103,8 +104,8 @@ const fieldData = [
             <tr>
               <th scope="col text-uppercase "> </th>
               <th scope="col text-uppercase "> COMPANY</th>
-              <th scope="col text-uppercase ">Asset Class</th>
-              <th scope="col text-uppercase ">Net Profit(Loss)</th>
+              <th scope="col text-uppercase">ASSET CLASS</th>
+              <th scope="col text-uppercase ">NET PROFIT(Loss)</th>
               <th scope="col text-uppercase ">SECTOR</th>
               <th scope="col text-uppercase ">NET MOIC</th>
               <th scope="col text-uppercase ">TOTAL INVESTMENT</th>
@@ -165,9 +166,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
         </td>
         <td className='text-capitalize'>{company?.name}</td>
         <td>{company?.dealSummary?.asset}</td>
-        <td>{company?.dealSummary?.profitLoss}</td>
-        <td>{company?.dealSummary?.sector}</td>
-        <td>{company?.moic}</td>
+        <NetProfit deals={deals} userId={userId} currentValuation={company?.dealSummary?.currentValuation} sector={company?.dealSummary?.sector} />
         <td>{currencyFormatter(totalIvestMents)}</td>
         <td>{irr}</td>
         <td className="d-flex gap-3">
@@ -176,7 +175,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
           </button>
         </td>
       </tr>
-      {isDealList && <DealListpop company={company} deals={deals} setIsNew={setisDealList} />}
+      {isDealList && <DealListpop userId={userId} company={company} deals={deals} setIsNew={setisDealList} />}
     </>
   );
 };

@@ -69,7 +69,6 @@ const login = async (req, res) => {
         .status(404)
         .json({ message: "Your account does not exist. Please sign up." });
     }
-
     const isMatched = await user.comparePassword(req.body.password);
     if (!isMatched) {
       return res.status(403).json({ message: "Invalid password" });

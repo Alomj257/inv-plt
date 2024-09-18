@@ -103,7 +103,6 @@ const NewCompany = () => {
     }
   };
 
-  // console.log(investDoc,updateDoc)
   const handleInvestDoc = (e) => {
     try {
       const { name, files } = e.target;
@@ -146,9 +145,6 @@ const NewCompany = () => {
     }
     formData.append("dealSummary", JSON.stringify(deal));
     formData.append("news", JSON.stringify(news));
-    // formData.append("update", updateDoc);
-    // formData.append("investDoc", investDoc);
-    console.log(updateDoc,investDoc);
     updateDoc.forEach((doc) => {
       formData.append("update", doc['updatedoc']); 
     });

@@ -6,8 +6,9 @@ import { getAuth } from "../../../utils/authenticationHelper";
 import { Server } from "../../../service/axios";
 import { currencyFormatter } from "../../../utils/formater/dateTimeFormater";
 import { calculateIrrSingleInvestment } from "../../../utils/calculations/calculateIrrSingleInvestment";
+import NetProfit from "./profitCal";
 
-const DealListpop = ({ setIsNew,company, deals }) => {
+const DealListpop = ({ setIsNew,company, deals,userId }) => {
   const navigate=useNavigate();
   const user= getAuth()?.user;  
   console.log(deals)
@@ -28,11 +29,10 @@ const DealListpop = ({ setIsNew,company, deals }) => {
               <th scope="col text-uppercase "> </th>
               <th scope="col text-uppercase "> DEAL NAME</th>
               <th scope="col text-uppercase ">ASSET ClASS </th>
-              <th scope="col text-uppercase ">SECTOR</th>
-              <th scope="col text-uppercase "> INVESTMENT 
-              DATE</th>
+              <th scope="col text-uppercase "> INVESTMENT DATE</th>
               <th scope="col text-uppercase "> INVESTMENT</th>
               <th scope="col text-uppercase ">NET PROFIT(LOSS)</th>
+              <th scope="col text-uppercase ">SECTOR</th>
               <th scope="col text-uppercase ">NET MOIC</th>
               <th scope="col text-uppercase ">NET IRR </th>
               <th scope="col text-uppercase ">WEIGHT </th>
@@ -40,18 +40,16 @@ const DealListpop = ({ setIsNew,company, deals }) => {
           </thead>
           <tbody>
             {deals?.map((val, key) => (
-              <tr key={key} className="p-3 " onClick={()=>navigate("about",{state:company?._id})}>
+              <tr key={key} className="p-3 " >
                 <td>
-                <div className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
+                <div onClick={()=>navigate("about",{state:company?._id})} className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
                 </td>
                 <td className="text-capitalize">{company?.name}</td>
                 <td>{company?.dealSummary?.asset}</td>
-                <td>{company?.dealSummary?.sector}</td>
                 <td>{val?.investedDate}</td>
-                <td> { currencyFormatter(val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount)}</td>
-                <td>{company?.dealSummary?.profite}</td>
-                <td>{val?.moic}</td>
-                <td><IrrVal initialInvestment={val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount} investmentDate={val?.investedDate}  currentValue={val?.currentValue}/></td>
+                <td> {currencyFormatter(val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount||val?.investors&&val?.investors?.find(v=>v.investerId===userId)?.amount)}</td>
+                <NetProfit deal={val} currentValuation={company?.dealSummary?.currentValuation} userId={userId||user?._id} sector={company?.dealSummary?.sector}/>
+                <td><IrrVal initialInvestment={val?.investors&&val?.investors?.find(v=>v.investerId===(userId||user?._id))?.amount} investmentDate={val?.investedDate}  currentValue={val?.currentValue}/></td>
                 <td>{val?.weight}</td>
               </tr>
             ))}
