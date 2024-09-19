@@ -458,10 +458,10 @@ export default NewCompany;
 
 const data = [
   { name: "asset", label: "ASSET CLASS" ,type:"input"},
-  { name: "investDate", label: "INVESTMENT DATE",type:"input" },
+  { name: "investDate", label: "INVESTMENT DATE" },
   { name: "sector", label: "SECTOR",type:"input" },
   { name: "cumulatedInvest", label: "CUMULATED INVESTMENTS", },
-  { name: "currentValuation", label: "CURRENT VALUATION" },
+  { name: "currentValuation", label: "CURRENT VALUATION" ,type:'input'},
   { name: "profitLoss", label: "TOTAL PROFIT (LOSS)" },
 ];
 
