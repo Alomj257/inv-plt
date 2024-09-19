@@ -13,17 +13,21 @@ const Companies = () => {
   const [companies,setCompanies]=useState([]);
   const [companyId,setCompanyId]=useState('');
   const navigate=useNavigate();
+
+  const handle=async()=>{
+    const data=await getAllCompanyService();
+    setCompanies(data);
+  }
   useEffect(()=>{
-    const handle=async()=>{
-      const data=await getAllCompanyService();
-      setCompanies(data);
-    }
     handle();
   },[]);
 
   const hanndleDelete=async(id)=>{
     setCompanies((pre)=>pre.filter(v=>v._id!==id));
   await  deleteCompanyService(id);
+  }
+  const reFetch=()=>{
+    handle();
   }
 
   return (
@@ -68,7 +72,7 @@ const Companies = () => {
         ))}
       </tbody>
     </table>
-   {isDeal&& <AddDealPop companyId={companyId} setIsNew={setIsDeal} />}
+   {isDeal&& <AddDealPop reFetch={reFetch} companyId={companyId} setIsNew={setIsDeal} />}
   </div>
   )
 }

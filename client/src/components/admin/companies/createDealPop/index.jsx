@@ -6,7 +6,7 @@ import { getUsersByRolesService } from "../../../../service/auth/AuthService";
 import { currencyFormatter, deformateCurrency } from "../../../../utils/formater/dateTimeFormater";
 import { getByIdCompanyService,    updateCompanyWithoutService } from "../../../../service/company/companyService";
 
-const AddDealPop = ({ setIsNew, companyId }) => {
+const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
 
   const [deal, setDeal] = useState({});
   const [fields, setFields] = useState([]);
@@ -74,10 +74,12 @@ const AddDealPop = ({ setIsNew, companyId }) => {
     }else{
       investDate=company?.dealSummary.investDate;
     }
-
     await updateCompanyWithoutService(companyId,{investDate:investDate,currentValuation:deal?.currentValue});
-    await addDealService(newDeal);
-    setIsNew(false);
+    const data=    await addDealService(newDeal);
+    if(data){
+        reFetch();
+        setIsNew(false);
+    }
   };
 console.log(fields);
   return (

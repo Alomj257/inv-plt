@@ -8,6 +8,7 @@ export const  addDealService=async(val)=>{
             return showToast("error",data?.message);
         }
         showToast("success",data);
+        return data;
     } catch (error) {
         console.log(error);
         showToast("error",error?.response?.data?.messsage);

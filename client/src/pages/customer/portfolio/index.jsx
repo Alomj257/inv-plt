@@ -3,10 +3,10 @@ import invest from "../../../assets/all-img/investment.png"
 import valuation from "../../../assets/all-img/examination.png"
 import amount from "../../../assets/all-img/receive-money.png"
 import moic from "../../../assets/all-img/distribution-of-wealth.png"
-import profit from "../../../assets/all-img/increase.png"
+import pro from "../../../assets/all-img/increase.png"
 import irr from "../../../assets/all-img/return-on-investment.png"
 import DealListpop from '../../../components/customer/dealPop'
-import {  getByIdCompanyService } from '../../../service/company/companyService'
+import {  getAllCompanyService, getByIdCompanyService } from '../../../service/company/companyService'
 import { getAllDealByUserAndCompanyService } from '../../../service/deal/dealService'
 import { Server } from '../../../service/axios'
 import { getAuth } from '../../../utils/authenticationHelper'
@@ -19,54 +19,75 @@ const Portfolio = () => {
   const [company,setCompany]=useState([]);
   const [totalInvestments,setTotalInvestment]=useState(0);
   const [totalInvested,setTotalInvested]=useState(0);
+  const [TotalCurrenctValuation,setTotalCurrentValuation]=useState(0);
+  const [profit,setprofit]=useState(0);
+  const [netMoic,setMoic]=useState(0);
   const [irrVal,setIrr]=useState(0);
   const userId=getAuth()?.user?._id;
 
   
 const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
-   {name:"  CURRENT VALUATION",qty:currencyFormatter(0),icon:valuation},
+   {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation),icon:valuation},
    {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
-   {name:"  NET MOIC",qty:"0%",icon:moic},
-   {name:" NET PROFIT (LOSS)",qty:currencyFormatter(0),icon:profit},
+   {name:"  NET MOIC",qty:((netMoic||0)*100).toFixed(2)+"%",icon:moic},
+   {name:" NET PROFIT (LOSS)",qty:currencyFormatter(profit),icon:pro},
    {name:"  NET IRR",qty:irrVal,icon:irr},
   ];
-
-  useEffect(()=>{
-    const getCompany=async()=>{
-      const data=await getAllDealByUserAndCompanyService(userId);
-      setTotalInvestment(() => {
-        const totalDeals = data.reduce((sum, item) => {
-          return sum + (item?.deals?.length || 0);
-        }, 0);
-        return totalDeals;
-      });
-      setTotalInvested(() => {
-        const totalDeals = data.reduce((sum, item) => {
-          const dealSum = item?.deals?.reduce((dealSum, deal) => {
-            const investor = deal?.investors?.find(
-              (v) => v?.investerId === userId
-            );
-            return dealSum + parseInt(investor?.amount || 0)+parseInt(investor?.fees||0);
-          }, 0);
-          return sum + dealSum;
-        }, 0);
-        return totalDeals;
-      });
-      const { totalCurrentValue, currentDate, investments } =
-        portfolioIrrParameter(data, userId);
-      if (totalCurrentValue && currentDate && investments) {
-        const ans = calculatePortfolioIrr(
-          investments,
-          currentDate,
-          totalCurrentValue
-        );
-        setIrr(ans);
+  useEffect(() => {
+    const getCompany = async () => {
+      const data = await getAllDealByUserAndCompanyService(userId);
+      const allCompany = await getAllCompanyService();
+  
+      // Calculate current valuation
+      let currentValuation = 0;
+      if (Array.isArray(data)) {
+        data.forEach(ele => {
+          const company = allCompany?.find(v => v?._id === ele?._id);
+          if (company && company.dealSummary) {
+            currentValuation += parseInt(company.dealSummary.currentValuation || 0);
+          }
+        });
       }
+  
+      // Calculate total investment count
+      const totalInvestment = data?.reduce((sum, item) => {
+        return sum + (item?.deals?.length || 0);
+      }, 0);
+  
+      // Calculate total invested amount (amount + fees)
+      const totalInvested = data?.reduce((sum, item) => {
+        const dealSum = item?.deals?.reduce((dealSum, deal) => {
+          const investor = deal?.investors?.find(v => v?.investerId === userId);
+          return dealSum + parseInt(investor?.amount || 0) + parseInt(investor?.fees || 0);
+        }, 0);
+        return sum + dealSum;
+      }, 0);
+  
+      // Calculate IRR
+      const { totalCurrentValue, currentDate, investments } = portfolioIrrParameter(data, userId);
+      if (totalCurrentValue && currentDate && investments) {
+        const irrValue = calculatePortfolioIrr(investments, currentDate, totalCurrentValue);
+        setIrr(irrValue);
+      }
+  
+      // Set state variables together to avoid inconsistent updates
+      setTotalCurrentValuation(currentValuation);
+      setTotalInvestment(totalInvestment);
+      setTotalInvested(totalInvested);
       setCompany(data);
-    }
+  
+      // Calculate profit and MOIC after setting totalInvested and currentValuation
+      const calculatedProfit = currentValuation - totalInvested;
+      setprofit(calculatedProfit);
+  
+      const calculatedMoic = (calculatedProfit + totalInvested) / totalInvested;
+      setMoic(calculatedMoic);
+    };
+  
     getCompany();
-  },[userId])
+  }, [userId]);
+  
 
   return (
     <>

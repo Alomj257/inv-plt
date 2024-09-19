@@ -16,6 +16,7 @@ import {
   formatTimeFromNow,
 } from "../../../../utils/formater/dateTimeFormater";
 import { getInvestmentsAndCurrent } from "../../../../utils/totalInvestmentAndCurrenctByCompany";
+import { companyProfit } from "../../../../utils/calculations/companyProfit";
 const NewCompany = () => {
   const { state } = useLocation();
   const [isNews, setIsNew] = useState(false);
@@ -55,13 +56,13 @@ const NewCompany = () => {
     const handle=async()=>{
       if(company?._id){
     const {totalInvestment,current}=await getInvestmentsAndCurrent(company?._id);
-    setDeal({...deal,cumulatedInvest:totalInvestment})
+    const pro= await companyProfit(state,deal?.currentValuation||0)
+    setDeal({...deal,cumulatedInvest:totalInvestment,profitLoss:pro})
     }
   }
     handle();
   },[company?._id])
-
-
+console.log(deal)
   const handleChange = (e) => {
     try {
       const { name, value, files } = e.target;
@@ -165,7 +166,6 @@ const NewCompany = () => {
     downloadFileService(file);
   }
 
-console.log(company)
 
   return (
     <form action="" onSubmit={handleSubmit}>
@@ -269,7 +269,7 @@ console.log(company)
                   </div>
                 </div>
                 <div className="deal-list px-4  h-100 py-4  rounded bg-white border border-2 d-flex flex-column gap-3 h-100">
-                  {data?.map((val, index) => (
+                  {dealData?.map((val, index) => (
                     <div key={index}>
                       <label htmlFor={val?.name} className="text-muted small">
                         {val?.label}
@@ -284,10 +284,10 @@ console.log(company)
                             placeholder="-"
                             className=" rounded px-2 w-100"
                           />
-                        ) : deal && deal[val?.name] ? (
+                        ) : (deal && deal[val?.name]) ? (
                           <span className="fw-semibold">
                             {money.includes(val?.name) ?
-                              currencyFormatter(deal[val?.name]):deal[val?.name]}
+                              currencyFormatter(deal[val?.name]||0):deal[val?.name]}
                           </span>
                         ) : (
                           "-"
@@ -456,7 +456,7 @@ console.log(company)
 export default NewCompany;
 
 
-const data = [
+const dealData = [
   { name: "asset", label: "ASSET CLASS" ,type:"input"},
   { name: "investDate", label: "INVESTMENT DATE" },
   { name: "sector", label: "SECTOR",type:"input" },
