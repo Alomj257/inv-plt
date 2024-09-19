@@ -103,7 +103,7 @@ const fieldData = [
                         <span className='text-muted small'>{val?.name}</span>
                         <span className='fw-bold '>{val?.qty}</span>
                     </div>
-                    <div className='my-auto  rounded-circle bg-very-light-red' style={{width:"40px",aspectRatio:"1/1"}}><img className='w-100 h-100 p-2' src={val?.icon} alt={val?.name} /></div>
+                    <div className='my-auto  rounded-circle bg-very-light-red' style={{width:"40px",aspectRatio:"1/1"}}><img className='w-100 h-100 p-2' src={val?.icon} alt='' /></div>
                     </div>
                 </div>
               ))}
