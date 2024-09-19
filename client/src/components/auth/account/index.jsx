@@ -32,7 +32,7 @@ const Account = ({setAccount}) => {
                 type={show===val?.name?"text":val?.type}
                 name={val?.name}
                 onChange={handleChange}
-                placeholder={val?.place}
+                // placeholder={val?.place}
                 className="input-field text-white"
               />
              {val?.name==="password"&&<span className="eye">{show!=="password"?<FaEyeSlash onClick={()=>setShow(val?.name)} size={20}/> :<FaEye onClick={()=>setShow('')} size={20}/>}</span>}

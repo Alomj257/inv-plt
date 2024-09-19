@@ -21,15 +21,15 @@ const AddNewsPop = ({setIsNew,setNews}) => {
             <div className='d-flex flex-column gap-4'>
                 <div className="field">
                     <label htmlFor="">News Title</label>
-                    <input type="text" name='name' onChange={handleChange} className='input-field' placeholder='Title' />
+                    <input type="text" name='name' onChange={handleChange} className='input-field'  />
                 </div>
                 <div className="field">
                     <label htmlFor="">News Link</label>
-                    <input type="text" name='link' onChange={handleChange} className='input-field' placeholder='https:google.com' />
+                    <input type="text" name='link' onChange={handleChange} className='input-field'  />
                 </div>
                 <div className="field">
                     <label htmlFor="">News Date</label>
-                    <input type="date" name='date' onChange={handleChange} className='input-field' placeholder='' />
+                    <input type="date" name='date' onChange={handleChange} className='input-field' />
                 </div>
                 <div className="text-center">
                     <button type='button' onClick={handleAdd} className="btn-red col-3 rounded-5">Save</button>

@@ -86,7 +86,6 @@ const Investment = ({ invest, step, setInvestVal }) => {
                         onChange={fieldChange}
                         rows={4}
                         className="input-field"
-                        placeholder="Write Here"
                         name="expertise"
                         id=""
                       ></textarea>
@@ -97,7 +96,6 @@ const Investment = ({ invest, step, setInvestVal }) => {
                         onChange={fieldChange}
                         rows={4}
                         className="input-field"
-                        placeholder="Write Here"
                         name="expertise"
                         id=""
                       ></textarea>

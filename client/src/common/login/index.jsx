@@ -32,11 +32,11 @@ const Login = () => {
             <div className='d-flex flex-column gap-4'>
                 <div className="field">
                     <label htmlFor="">Username</label>
-                    <input type="text" name='email' onChange={handleChange} className='input-field' placeholder='email' />
+                    <input type="text" name='email' onChange={handleChange} className='input-field' />
                 </div>
                 <div className="field">
                     <label htmlFor="">Password</label>
-                    <input type="password" name='password' onChange={handleChange} className='input-field' placeholder='Password' />
+                    <input type="password" name='password' onChange={handleChange} className='input-field' />
                 </div>
                 <div className="text-center">
                     <button type='submit'  className="btn-red col-3 rounded-5">Login</button>

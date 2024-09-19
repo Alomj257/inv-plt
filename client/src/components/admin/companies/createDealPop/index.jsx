@@ -106,11 +106,6 @@ console.log(fields);
                       currentValue: e.target.value
                   })}
                   className="input-field"
-                  placeholder={currencyFormatter(
-                    parseInt(53092),
-                    currency?.currency,
-                    currency?.style
-                  )}
                 />
               </div>
               <div className="field">
@@ -174,33 +169,26 @@ console.log(fields);
                     name="amount"
                     value={field.amount}
                     className="input-field"
-                    placeholder={currencyFormatter(
-                      parseInt(5000),
-                      currency?.currency,
-                      currency?.style
-                    )}
                     onChange={(event) => handleChange(index, event)}
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor={`entryFee-${index}`}>Entry Fee</label>
+                  <label htmlFor={`entryFee-${index}`}>Entry Fee in %</label>
                   <input
                     type="text"
                     name="entryFee"
                     value={field.entryFee}
                     className="input-field"
-                    placeholder="2.34%"
                     onChange={(event) => handleChange(index, event)}
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor={`carried-${index}`}>Carried</label>
+                  <label htmlFor={`carried-${index}`}>Carried in %</label>
                   <input
                     type="text"
                     name="carried"
                     value={field.carried}
                     className="input-field"
-                    placeholder="2%"
                     onChange={(event) => handleChange(index, event)}
                   />
                 </div>

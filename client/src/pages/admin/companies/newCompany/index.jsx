@@ -226,7 +226,6 @@ console.log(company)
                         onChange={handleChange}
                         value={company?.name}
                         className="py-2 rounded ms-3"
-                        placeholder="company name "
                       />
                     ) : (
                       <span className="text-uppercase ps-2 fw-bold">{company?.name}</span>
@@ -248,7 +247,7 @@ console.log(company)
                     disabled={!isAbout}
                     onChange={handleChange}
                     placeholder={`${
-                      isAbout ? "Enter description" : "click on edit button."
+                      isAbout ? "" : "click on edit button."
                     }  `}
                     className="w-100 border pb-0 bg-white rounded p-3"
                     rows={7}
