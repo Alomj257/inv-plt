@@ -1,15 +1,17 @@
+import { lazy } from "react";
+
 /* eslint-disable react-refresh/only-export-components */
-import AdminLayout from "../pages/admin/adminLayout";
-import Dashboard from "../pages/admin/dashboard";
-import CreateMamber from "../pages/admin/members/createMamber";
-import Companies from "../pages/admin/companies";
-import NewCompany from "../pages/admin/companies/newCompany";
-import CustomerLayout from "../pages/customer/customerLayout";
-import Portfolio from "../pages/customer/portfolio";
-import AboutDeal from "../pages/customer/portfolio/aboutDeal";
-import Login from "../common/login";
-import Register from "../common/register";
-import Profile from "../common/profile";
+const  AdminLayout = lazy(()=>import( "../pages/admin/adminLayout"));
+const  Dashboard = lazy(()=>import( "../pages/admin/dashboard"));
+const  CreateMamber = lazy(()=>import( "../pages/admin/members/createMamber"));
+const  Companies = lazy(()=>import( "../pages/admin/companies"));
+const  NewCompany = lazy(()=>import( "../pages/admin/companies/newCompany"));
+const  CustomerLayout = lazy(()=>import( "../pages/customer/customerLayout"));
+const  Portfolio = lazy(()=>import( "../pages/customer/portfolio"));
+const  AboutDeal = lazy(()=>import( "../pages/customer/portfolio/aboutDeal"));
+const  Login = lazy(()=>import( "../common/login"));
+const  Register = lazy(()=>import( "../common/register"));
+const  Profile = lazy(()=>import( "../common/profile"));
 
 export const routes = [
   { path: "/login",

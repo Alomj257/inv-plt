@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { FaCheck } from "react-icons/fa6";
-
+import aferica from "../../../assets/icons continent/Africa.png"
+import asia from "../../../assets/icons continent/Asia.png"
+import  europe from "../../../assets/icons continent/Europe.png"
+import latin from "../../../assets/icons continent/Latin america.png"
+import map from "../../../assets/icons continent/map (4).png"
+import north from "../../../assets/icons continent/North America.png"
 const Investment = ({ invest, step, setInvestVal }) => {
   const [active, setActive] = useState([]);
   const handleChange = (field, value, selectType) => {
@@ -65,10 +70,10 @@ const Investment = ({ invest, step, setInvestVal }) => {
                         >
                           {val?.isIcon && (
                             <div
-                              className="bg-white rounded-circle text-dark d-flex align-items-center justify-content-center"
-                              style={{ width: "20px", aspectRatio: "1/1" }}
+                              className={`${val?.field!=='region'&&'bg-white'} ${val?.field==='region'&&i>=icons?.length&&'bg-white'} rounded-circle text-dark d-flex align-items-center justify-content-center`}
+                              style={{width: (val?.field!=='region'||val?.field==='region'&&i>=icons?.length)&&"20px", aspectRatio: "1/1" }}
                             >
-                              {active.includes(v) && <FaCheck />}
+                              { val?.field==='region'&&i<icons?.length?<img style={{width:"30px"}} src={icons[i]} alt="" /> : active.includes(v) &&  <FaCheck />}
                             </div>
                           )}
                           <span>{v}</span>
@@ -111,3 +116,6 @@ const Investment = ({ invest, step, setInvestVal }) => {
 };
 
 export default Investment;
+
+
+const icons =[north,latin,europe,asia,aferica,map]
