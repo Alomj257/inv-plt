@@ -14,13 +14,14 @@ import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
 import { portfolioIrrParameter } from '../../../utils/calculationConversion'
 import { calculatePortfolioIrr } from '../../../utils/calculations/portfolioIrr'
 import NetProfit from '../../admin/members/createMamber/investments/values/netProfit'
-import { netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal'
+import { exchange, netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal'
 
 const Portfolio = () => {
   const [company,setCompany]=useState([]);
   const [totalInvestments,setTotalInvestment]=useState(0);
   const [totalInvested,setTotalInvested]=useState(0);
   const [TotalCurrenctValuation,setTotalCurrentValuation]=useState(0);
+  const [rate,setRate]=useState(1);
   const [profit,setprofit]=useState(0);
   const [moic,setMoic]=useState(0);
   const [irrVal,setIrr]=useState(0);
@@ -29,8 +30,8 @@ const Portfolio = () => {
   
 const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
-   {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation),icon:valuation},
-   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
+   {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation*rate),icon:valuation},
+   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested*rate),icon:amount},
    {name:"  NET MOIC",qty:((moic||0)*100).toFixed(2)+"%",icon:moicp},
    {name:" NET PROFIT (LOSS)",qty:currencyFormatter(profit),icon:pro},
    {name:"  NET IRR",qty:irrVal,icon:irr},
@@ -42,8 +43,10 @@ const fieldData = [
       let totalMoic=0;
       let pay=0;
       for (const it of data) {
-      for (const item of it?.deals) {
-        const investor = item?.investors?.find(v => v.investerId === userId);
+        for (const item of it?.deals) {
+          const rat=await exchange(item?.currency)
+            setRate(rat);
+          const investor = item?.investors?.find(v => v.investerId === userId);
         if (investor) {
           const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
           const carried = parseFloat(investor?.carried || 0);
