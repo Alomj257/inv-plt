@@ -8,7 +8,6 @@ import DealListpop from '../../../../../components/customer/dealPop';
 import { Server } from '../../../../../service/axios';
 import { currencyFormatter } from '../../../../../utils/formater/dateTimeFormater';
 import NetProfit from './values/netProfit';
-import Moic from './values/netmoic';
 
 const Investments = ({userId}) => {
   const [company,setCompany]=useState([]);

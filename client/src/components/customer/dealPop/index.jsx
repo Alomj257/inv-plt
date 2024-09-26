@@ -11,7 +11,6 @@ import NetProfit from "./profitCal";
 const DealListpop = ({ setIsNew,company, deals,userId }) => {
   const navigate=useNavigate();
   const user= getAuth()?.user;  
-  console.log(deals)
   return (
     <div className="pop">
       <div className="pop-body col-md-10">

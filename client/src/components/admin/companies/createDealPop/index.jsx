@@ -3,16 +3,17 @@ import "./pop.scss";
 import { BsX, BsPlus } from "react-icons/bs";
 import { addDealService } from "../../../../service/deal/dealService";
 import { getUsersByRolesService } from "../../../../service/auth/AuthService";
-import { currencyFormatter, deformateCurrency } from "../../../../utils/formater/dateTimeFormater";
 import { getByIdCompanyService,    updateCompanyWithoutService } from "../../../../service/company/companyService";
+import axios from "axios";
 
 const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
 
   const [deal, setDeal] = useState({});
   const [fields, setFields] = useState([]);
   const [investors,setInvestor]=useState([]);
-  const [currency,setCurrency]=useState('');
+  const [currency,setCurrency]=useState({currency:'EUR'});
   const [company,setComapany]=useState('');
+  const [rate,setRate]=useState(0.94);
 
   useEffect(()=>{
     const handle=async()=>{
@@ -21,6 +22,14 @@ const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
     }
     handle();
   },[companyId]);
+  
+  useEffect(()=>{
+    const handle=async()=>{
+      const {data}=await axios.get(`https://api.frankfurter.app/latest?from=${currency?.currency}`);
+      setRate(data?.rates?.EUR||1)
+    }
+    handle();
+  },[currency?.currency])
 
   useEffect(()=>{
     const getUsers=async()=>{
@@ -47,28 +56,26 @@ const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
         // First, update the field with the new value
         const updatedField = {
           ...field,
-          [name]: value
+          [name]:value
         };
         const amount = parseInt(updatedField['amount'] || 0);
         const entryFee = parseInt(updatedField['entryFee'] || 0);
         const carried = parseInt(updatedField['carried'] || 0);
-        updatedField.fees = (amount * (entryFee + carried)) / 100;
+        updatedField.fees = (amount * entryFee) / 100;
         return updatedField;
       }
       
       return field;
     });
-  
     setFields(newFields);
   };
   
   
   const handleDeal = async (e) => {
     e.preventDefault();
-    const newDeal = { ...deal, investors: fields, companyId };
-
+   const newFields= fields?.map(val=>({...val,amount:parseInt(val?.amount||0)*rate,fees:parseFloat(val?.fees||0)*rate}));
+    const newDeal = { ...deal,currency:currency?.currency, investors: newFields, companyId };
     let investDate;
-
     if(!company.dealSummary||!company.dealSummary.investDate){
      investDate= deal?.investedDate;
     }else{
@@ -81,10 +88,9 @@ const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
         setIsNew(false);
     }
   };
-console.log(fields);
   return (
     <div className="pop">
-      <div className="pop-body col-8 pb-5">
+      <div className="pop-body col-10 pb-5">
         <div className="text-end">
           <BsX
             onClick={() => setIsNew((prev) => !prev)}
@@ -175,7 +181,7 @@ console.log(fields);
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor={`entryFee-${index}`}>Entry Fee in %</label>
+                  <label htmlFor={`entryFee-${index}`}> Entry Fee (%)</label>
                   <input
                     type="text"
                     name="entryFee"
@@ -185,11 +191,21 @@ console.log(fields);
                   />
                 </div>
                 <div className="field">
-                  <label htmlFor={`carried-${index}`}>Carried in %</label>
+                  <label htmlFor={`carried-${index}`}>Carried (%)</label>
                   <input
                     type="text"
                     name="carried"
                     value={field.carried}
+                    className="input-field"
+                    onChange={(event) => handleChange(index, event)}
+                  />
+                </div>
+                <div className="field">
+                  <label htmlFor={`share-${index}`}> Shareholding (%)</label>
+                  <input
+                    type="text"
+                    name="shareholding"
+                    value={field.shareholding}
                     className="input-field"
                     onChange={(event) => handleChange(index, event)}
                   />

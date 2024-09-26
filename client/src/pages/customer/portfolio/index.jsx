@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import invest from "../../../assets/all-img/investment.png"
 import valuation from "../../../assets/all-img/examination.png"
 import amount from "../../../assets/all-img/receive-money.png"
-import moic from "../../../assets/all-img/distribution-of-wealth.png"
+import moicp from "../../../assets/all-img/distribution-of-wealth.png"
 import pro from "../../../assets/all-img/increase.png"
 import irr from "../../../assets/all-img/return-on-investment.png"
 import DealListpop from '../../../components/customer/dealPop'
@@ -14,6 +14,7 @@ import { currencyFormatter } from '../../../utils/formater/dateTimeFormater'
 import { portfolioIrrParameter } from '../../../utils/calculationConversion'
 import { calculatePortfolioIrr } from '../../../utils/calculations/portfolioIrr'
 import NetProfit from '../../admin/members/createMamber/investments/values/netProfit'
+import { netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal'
 
 const Portfolio = () => {
   const [company,setCompany]=useState([]);
@@ -21,7 +22,7 @@ const Portfolio = () => {
   const [totalInvested,setTotalInvested]=useState(0);
   const [TotalCurrenctValuation,setTotalCurrentValuation]=useState(0);
   const [profit,setprofit]=useState(0);
-  const [netMoic,setMoic]=useState(0);
+  const [moic,setMoic]=useState(0);
   const [irrVal,setIrr]=useState(0);
   const userId=getAuth()?.user?._id;
 
@@ -30,40 +31,36 @@ const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
    {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation),icon:valuation},
    {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
-   {name:"  NET MOIC",qty:((netMoic||0)*100).toFixed(2)+"%",icon:moic},
+   {name:"  NET MOIC",qty:((moic||0)*100).toFixed(2)+"%",icon:moicp},
    {name:" NET PROFIT (LOSS)",qty:currencyFormatter(profit),icon:pro},
    {name:"  NET IRR",qty:irrVal,icon:irr},
   ];
   useEffect(() => {
     const getCompany = async () => {
       const data = await getAllDealByUserAndCompanyService(userId);
-      const allCompany = await getAllCompanyService();
-  
-      // Calculate current valuation
-      let currentValuation = 0;
-      if (Array.isArray(data)) {
-        data.forEach(ele => {
-          const company = allCompany?.find(v => v?._id === ele?._id);
-          if (company && company.dealSummary) {
-            currentValuation += parseInt(company.dealSummary.currentValuation || 0);
-          }
-        });
+      let totalProfit=0;
+      let totalMoic=0;
+      let pay=0;
+      for (const it of data) {
+      for (const item of it?.deals) {
+        const investor = item?.investors?.find(v => v.investerId === userId);
+        if (investor) {
+          const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
+          const carried = parseFloat(investor?.carried || 0);
+          const shareholding = parseFloat(investor?.shareholding || 0);
+          const profitResult = await netProfit(paid, shareholding, parseInt(item?.currentValue||0), item.currency, carried/100);
+          const moicResult = await netMoic(paid, shareholding, parseInt(item?.currentValue||0), item.currency, carried/100);
+          totalProfit += profitResult;
+          totalMoic += moicResult;
+          pay+=paid;
+        }
       }
-  
-      // Calculate total investment count
-      const totalInvestment = data?.reduce((sum, item) => {
-        return sum + (item?.deals?.length || 0);
-      }, 0);
-  
-      // Calculate total invested amount (amount + fees)
-      const totalInvested = data?.reduce((sum, item) => {
-        const dealSum = item?.deals?.reduce((dealSum, deal) => {
-          const investor = deal?.investors?.find(v => v?.investerId === userId);
-          return dealSum + parseInt(investor?.amount || 0) + parseInt(investor?.fees || 0);
-        }, 0);
-        return sum + dealSum;
-      }, 0);
-  
+    };
+      setprofit(totalProfit);
+      setMoic(totalMoic);
+      setTotalInvested(pay);
+      setTotalCurrentValuation(pay+totalProfit)
+      setCompany(data)
       // Calculate IRR
       const { totalCurrentValue, currentDate, investments } = portfolioIrrParameter(data, userId);
       if (totalCurrentValue && currentDate && investments) {
@@ -71,23 +68,10 @@ const fieldData = [
         setIrr(irrValue);
       }
   
-      // Set state variables together to avoid inconsistent updates
-      setTotalCurrentValuation(currentValuation);
-      setTotalInvestment(totalInvestment);
-      setTotalInvested(totalInvested);
-      setCompany(data);
-  
-      // Calculate profit and MOIC after setting totalInvested and currentValuation
-      const calculatedProfit = currentValuation - totalInvested;
-      setprofit(calculatedProfit);
-  
-      const calculatedMoic = (calculatedProfit + totalInvested) / totalInvested;
-      setMoic(calculatedMoic);
     };
   
     getCompany();
   }, [userId]);
-  
 
   return (
     <>
@@ -154,9 +138,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
   const [isDealList, setisDealList] = useState(false);
   const [totalIvestMents,setTotalInvestMent]=useState(0);
   const [irr,setIrr]=useState(0);
-  
-
-
+  console.log(companyId)
 
   useEffect(() => {
     const getCompanyById = async () => {

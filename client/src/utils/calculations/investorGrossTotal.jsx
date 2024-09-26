@@ -1,65 +1,41 @@
-export const investorGrossTotal = (
+import axios from "axios";
+
+export const netProfit = async(
+  paid,
+  shareholding,
   currentValuation,
-  totalAmountInvested,
-  investByInvestor,
-  totalInvestedByCompany
+  currency,
+  carried
 ) => {
-  try {
-    //  const  totalAmountInvested=647662.5;
-    // const postValuation=54000000;
-    const currentPostValuation = 77600000;
-    const currentShareholding =
-      (totalAmountInvested / currentPostValuation) * 100;
-    const shareholdingInvestor =   (investByInvestor / totalInvestedByCompany) * 100;
-    return (currentShareholding * currentValuation * shareholdingInvestor).toFixed(2);
-  } catch (error) {
-    console.log(error);
-    return 0;
-  }
+ 
+  console.log(currency)
+  const rate=await exchange(currency);
+  const profit = (shareholding * parseInt(currentValuation||0) * rate/100)-paid ;
+  if (profit > 0) return profit;
+  return profit * (1 - carried);
 };
 
-export const netTotalProfit = (
+export const netMoic =async (
+  paid,
+  shareholding,
   currentValuation,
-  totalAmountInvested,
-  investByInvestor,
-  totalInvestedByCompany,
-  fees,
-      carried
+  currency,
+  carried
 ) => {
-  try {
-    const gross = investorGrossTotal(
-      currentValuation,
-      totalAmountInvested,
-      investByInvestor,
-      totalInvestedByCompany,
-    );
 
-    const paid=totalAmountInvested+fees;
-    if(gross-paid<=0){
-      return  (gross-paid).toFixed(2);
-    }else{
-        return (gross-paid)*(1-(carried||0)).toFixed(2);
-    }
-  } catch (error) {
-    console.log(error);
-    return 0;
-  }
+  const moic =
+    (await netProfit(paid, shareholding, currentValuation, currency, carried) + paid) /
+    paid;
+    return moic.toFixed(2);
 };
 
 
-export const netMoic=(  currentValuation,
-    totalAmountInvested,
-    investByInvestor,
-    totalInvestedByCompany,
-    fees,
-        carried)=>{
-            const paid=totalAmountInvested+fees;
-            const profit=netTotalProfit(currentValuation,
-                totalAmountInvested,
-                investByInvestor,
-                totalInvestedByCompany,
-                fees,
-                    carried);
-                    
-            return ((profit+paid)/paid).toFixed(2);
-        }
+export  const exchange=async(currency)=>{
+  const {data}=await axios.get(`https://api.frankfurter.app/latest?from=${currency||'EUR'}`);
+  return data?.rates?.EUR||1;
+}
+
+
+export const netTotalProfit=()=>{
+  return 0;
+}

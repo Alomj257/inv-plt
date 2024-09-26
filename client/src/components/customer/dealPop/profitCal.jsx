@@ -1,54 +1,55 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { getAllDealByInvestorService } from '../../../service/deal/dealService';
-import { netMoic, netTotalProfit } from '../../../utils/calculations/investorGrossTotal';
+import { netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal';
 
-const NetProfit = ({deal,sector,currentValuation,userId}) => {
-    const [profit,setProfit]=useState(0);
-    const [moic,setMoic]=useState(0);
-    const [totalAmountInvested,setTotalInvestMent]=useState(0);
-    useEffect(()=>{
-        const getAllProfit=async()=>{
-            const data=await getAllDealByInvestorService(userId);
-            setTotalInvestMent(() => {
-                const totalDeals = data.reduce((sum, item) => {
-                  const investor=item?.investors?.find(v=>v.investerId===userId);
-                  return sum + ( parseInt(investor?.amount || 0));
-                }, 0);
-                return totalDeals;
-              });
-        }
-        getAllProfit();
-    },[userId])
-    
+const NetProfit = ({ deal, sector, currentValuation, userId }) => {
+  const [profit, setProfit] = useState(0);
+  const [moic, setMoic] = useState(0);
+  const [totalAmountInvested, setTotalInvestment] = useState(0);
 
-    useEffect(() => {
-        let totalInvested = 0;
-        let totalFees = 0;
-        let totalInvestedInCompany = 0;
-        let carried=0;
+  useEffect(() => {
+    const getAllProfit = async () => {
+      const data = await getAllDealByInvestorService(userId);
+      const totalDeals = data.reduce((sum, item) => {
+        const investor = item?.investors?.find((v) => v.investerId === userId);
+        return sum + parseInt(investor?.amount || 0, 10);
+      }, 0);
+      setTotalInvestment(totalDeals);
+    };
+
+    getAllProfit();
+  }, [userId]);
+
+  useEffect(() => {
+    const calculateProfitAndMoic = async () => {
+      const investor = deal?.investors?.find((v) => v.investerId === userId);
       
-          const investor = deal?.investors?.find(v => v.investerId === userId);
-          if (investor) {
-            totalInvested += parseInt(investor?.amount || 0);
-            totalFees += parseInt(investor?.fees || 0);
-            carried+=parseInt(investor?.carried||0);
-          }
-          const companyInvestment = deal?.investors?.reduce((sum, v) => sum + parseInt(v?.amount || 0), 0);
-          totalInvestedInCompany += companyInvestment;
-    //   console.log(currentValuation,totalAmountInvested,totalInvested,totalInvestedInCompany,totalFees)
-        const pro=netTotalProfit(currentValuation,totalAmountInvested,totalInvested,totalInvestedInCompany,totalFees,carried/100);
-        const moic=netMoic(currentValuation,totalAmountInvested,totalInvested,totalInvestedInCompany,totalFees,carried/100);
-        setProfit(pro);
-        setMoic(moic);
-      }, [currentValuation,userId,deal,totalAmountInvested]);
-      
+      if (investor) {
+        const paid = parseFloat(investor?.amount || 0) + parseFloat(investor?.fees || 0);
+        const carried = parseFloat(investor?.carried || 0) / 100; // Converting to percentage
+        const shareholding = parseFloat(investor?.shareholding || 0);
+
+        // Ensure the calculation functions are awaited
+        const profitResult = await netProfit(paid, shareholding, currentValuation, deal.currency, carried);
+        const moicResult = await netMoic(paid, shareholding, currentValuation, deal.currency, carried);
+
+        setProfit(profitResult);
+        setMoic(moicResult);
+      }
+    };
+
+    if (deal && currentValuation) {
+      calculateProfitAndMoic();
+    }
+  }, [currentValuation, userId, deal, totalAmountInvested]);
+
   return (
     <>
-        <td>  {profit}</td> 
+      <td>{profit}</td>
       <td>{sector}</td>
-        <td>{moic}</td>
+      <td>{moic}</td>
     </>
-  )
-}
+  );
+};
 
-export default NetProfit
+export default NetProfit;

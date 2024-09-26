@@ -1,5 +1,6 @@
 const Company = require("../model/company");
 const path = require('path');
+const Deal = require("../model/deal");
 
 exports.createCompany=async(req,res)=>{
     try {
@@ -120,6 +121,7 @@ exports.updateWithoutFile=async(req,res)=>{
 
 exports.deleteCompany=async(req,res)=>{
     try {
+          await  Deal.deleteMany({companyId:req?.params?.id});
         const company=await Company.findById(req.params.id);
         if(!company){
             return res.status(403).json({message:'Company Id invalid '});

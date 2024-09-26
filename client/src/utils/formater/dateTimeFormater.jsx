@@ -35,7 +35,8 @@ export const currencyFormatter = (val, currency = 'EUR', style = 'currency') => 
   };
 
   export const deformateCurrency = (formattedCurrency) => {
-    const numericString = formattedCurrency.replace(/[^\d-]/g, '');
+    console.log(formattedCurrency)
+    // const numericString = formattedCurrency.replace(/[^\d-]/g, '');
     
     return parseInt(numericString, 10);
   };
