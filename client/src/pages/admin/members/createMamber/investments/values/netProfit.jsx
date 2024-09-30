@@ -27,6 +27,7 @@ useEffect(() => {
         const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
         const carried = parseFloat(investor?.carried || 0);
         const shareholding = parseFloat(investor?.shareholding || 0);
+
         const profitResult = await netProfit(paid, shareholding, currentValuation, item.currency, carried/100);
         const moicResult = await netMoic(paid, shareholding, currentValuation, item.currency, carried/100);
         totalProfit += profitResult;

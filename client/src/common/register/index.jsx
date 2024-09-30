@@ -173,7 +173,7 @@ const invest = [
       "Private equity",
       " Stock market",
       " Structured products",
-      " Real estat",
+      " Real estate",
       " Crypto",
       "Private debt",
       "Infrastructure",

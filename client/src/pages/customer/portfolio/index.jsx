@@ -30,9 +30,9 @@ const Portfolio = () => {
   
 const fieldData = [
    {name:" TOTAL INVESTMENTS",qty:totalInvestments,icon:invest},
-   {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation*rate),icon:valuation},
-   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested*rate),icon:amount},
-   {name:"  NET MOIC",qty:((moic||0)*100).toFixed(2)+"%",icon:moicp},
+   {name:"  CURRENT VALUATION",qty:currencyFormatter(TotalCurrenctValuation),icon:valuation},
+   {name:"   AMOUNT INVESTED (INCL. FEES)",qty:currencyFormatter(totalInvested),icon:amount},
+   {name:"  NET MOIC",qty:moic||0,icon:moicp},
    {name:" NET PROFIT (LOSS)",qty:currencyFormatter(profit),icon:pro},
    {name:"  NET IRR",qty:irrVal,icon:irr},
   ];

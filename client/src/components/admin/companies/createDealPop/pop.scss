@@ -17,11 +17,18 @@
         opacity: 100%;
         position: relative;
         z-index: 300;
+        max-height:90vh;
+        overflow-y: scroll;
+        scrollbar-width: none;
         border: 1px solid $border-line;
         .field{
             label{
                 margin-left: 15px;
             }
+        }
+        .close-investor{
+            top: -18px;
+            right: -18px;
         }
     }
 }
