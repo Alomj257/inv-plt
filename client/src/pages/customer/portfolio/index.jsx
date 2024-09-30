@@ -42,12 +42,14 @@ const fieldData = [
       let totalProfit=0;
       let totalMoic=0;
       let pay=0;
+      let total=0;
       for (const it of data) {
         for (const item of it?.deals) {
           const rat=await exchange(item?.currency)
-            setRate(rat);
+          setRate(rat);
           const investor = item?.investors?.find(v => v.investerId === userId);
-        if (investor) {
+          if (investor) {
+            total+=1;
           const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
           const carried = parseFloat(investor?.carried || 0);
           const shareholding = parseFloat(investor?.shareholding || 0);
@@ -64,6 +66,7 @@ const fieldData = [
       setTotalInvested(pay);
       setTotalCurrentValuation(pay+totalProfit)
       setCompany(data)
+      setTotalInvestment(total);
       // Calculate IRR
       const { totalCurrentValue, currentDate, investments } = portfolioIrrParameter(data, userId);
       if (totalCurrentValue && currentDate && investments) {
