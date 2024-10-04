@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import "./portfolio.scss";
 import invest from "../../../assets/all-img/investment.png"
 import valuation from "../../../assets/all-img/examination.png"
 import amount from "../../../assets/all-img/receive-money.png"
@@ -110,18 +111,20 @@ const fieldData = [
             </div>
         </div>
         <div className="bg-white h-50">
-        <table className="table">
+        <table>
           <thead className="thead-dark">
             <tr>
-              <th scope="col text-uppercase "> </th>
-              <th scope="col text-uppercase "> COMPANY</th>
-              <th scope="col text-uppercase">ASSET CLASS</th>
-              <th scope="col text-uppercase ">NET PROFIT(Loss)</th>
-              <th scope="col text-uppercase ">SECTOR</th>
-              <th scope="col text-uppercase ">NET MOIC</th>
-              <th scope="col text-uppercase ">TOTAL INVESTMENT</th>
-              <th scope="col text-uppercase ">NET IRR </th>
-              <th scope="col text-uppercase ">NUMBER OF INVESTMENTS </th>
+             
+              <th scope="col " style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"> </th>
+              <th scope="col "> COMPANY</th>
+              <th scope="col">ASSET CLASS</th>
+              <th scope="col ">NET PROFIT(Loss)</th>
+              <th scope="col ">SECTOR</th>
+              <th scope="col ">NET MOIC</th>
+              <th scope="col ">TOTAL INVESTMENT</th>
+              <th scope="col ">NET IRR </th>
+              <th scope="col ">NUMBER OF INVESTMENTS </th>
+              <th style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"></th>
             </tr>
           </thead>
           <tbody>
@@ -171,18 +174,21 @@ const Company = ({ companyId,list, index, deals,userId }) => {
     <>
       <tr key={index} className="p-3 ">
         <td>
-        <div className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
+        <div className=' ms-2' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
         </td>
         <td className='text-capitalize'>{company?.name}</td>
         <td>{company?.dealSummary?.asset}</td>
         <NetProfit deals={deals} userId={userId} currentValuation={company?.dealSummary?.currentValuation} sector={company?.dealSummary?.sector} />
         <td>{currencyFormatter(totalIvestMents)}</td>
         <td>{irr}</td>
-        <td className="d-flex gap-3">
+        <td >
+          <div className='d-flex justify-content-end'>
           <button onClick={() => setisDealList(true)} className="btn-red">
             {deals && deals?.length} Investments
           </button>
+          </div>
         </td>
+        <td  style={{width:'50px',aspectRatio:"1/1"}}></td>
       </tr>
       {isDealList && <DealListpop userId={userId} company={company} deals={deals} setIsNew={setisDealList} />}
     </>

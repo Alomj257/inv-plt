@@ -27,15 +27,16 @@ const handleDelete=async(id)=>{
 
   return (
     <div className="bg-white admin-dashboard h-100 ">
-      <table className="table">
+      <table >
         <thead className="thead-dark">
           <tr>
-            <th scope="col"></th>
-            <th scope="col">Member's Name</th>
+            <th style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"></th>
+            <th scope="col" className="border-0 ps-3">Member's Name</th>
             <th scope="col">Email</th>
             <th scope="col">TOTAL INVESTMENT</th>
             <th scope="col"> TOTAL AMOUNT </th>
             <th scope="col"> </th>
+            <th  className="border-0"></th>
           </tr>
         </thead>
         <tbody>
@@ -44,10 +45,10 @@ const handleDelete=async(id)=>{
               <td style={{ width: "60px", aspectRatio: "1/1" }}>
                 {/* <img className="w-100 h-100" src={val?.img || img} alt="" /> */}
               </td>
-              <td>{val?.personal?.firstName} {val?.personal?.lastName}</td>
+              <td className=" ps-5">{val?.personal?.firstName} {val?.personal?.lastName}</td>
               <td>{val?.account?.email}</td>
              <Deals userId={val._id}/>
-              <td className="d-flex gap-3">
+              <td className="d-flex gap-3 ">
                 <button
                   onClick={() => navigate("personal-details",{state:val?._id})}
                   className="btn text-primary bg-very-light-gray rounded-circle"
@@ -58,10 +59,14 @@ const handleDelete=async(id)=>{
                   <FaTrash size={20} />
                 </button>
               </td>
+              <td style={{ width: "60px", aspectRatio: "1/1" }}>
+                {/* <img className="w-100 h-100" src={val?.img || img} alt="" /> */}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {/* <Demo/> */}
     </div>
   );
 };
@@ -107,7 +112,27 @@ const Deals = ({ userId }) => {
   return (
     <>
       <td>{investment} Investments</td>
-      <td>{currencyFormatter(amount)}</td>
+      <td >{currencyFormatter(amount)}</td>
     </>
   );
 };
+
+// const Demo=()=>{
+//   return(<>
+//   <table>
+//   <tr>
+//     <th>Header 1</th>
+//     <th>Header 2</th>
+//   </tr>
+//   <tr>
+//     <td>Row 1, Cell 1</td>
+//     <td>Row 1, Cell 2</td>
+//   </tr>
+//   <tr>
+//     <td>Row 2, Cell 1</td>
+//     <td>Row 2, Cell 2</td>
+//   </tr>
+// </table>
+
+//   </>)
+// }

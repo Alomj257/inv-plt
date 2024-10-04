@@ -32,26 +32,29 @@ const Companies = () => {
 
   return (
     <div className="bg-white company h-100 ">
-    <table className="table">
+    <table >
       <thead className="thead-dark">
         <tr>
-          <th scope="col">Logo</th>
+          <th className='border-0' scope="col"></th>
           <th scope="col">Name</th>
           <th scope="col">CUMULATED INVESTMENT</th>
           <th scope="col">CURRENT VALUATION </th>
           <th scope="col"></th>
+          <td style={{ width: "60px", aspectRatio: "1/1" }} className='border-0'>
+          </td>
         </tr>
       </thead>
       <tbody>
         {companies&&companies?.map((val, key) => (
           <tr key={key} className=' '>
             <td >
-           <div style={{ width: "60px", aspectRatio: "1/1" }}>   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
+           <div style={{ width: "60px", aspectRatio: "1/1",marginLeft:"20px" }} >   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
             </td>
             <td className='text-uppercase '>{val?.name}</td>
             <Invest id={val?._id}/>
             <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
-            <td className="d-flex gap-4">
+            <td >
+              <div className="d-flex gap-4">
             <button className="btn-red" onClick={()=>{setIsDeal(!isDeal);setCompanyId(val?._id);}}>
               Create a deal
               </button>
@@ -67,6 +70,9 @@ const Companies = () => {
               >
                 <FaTrashAlt size={20} />
               </button>
+              </div>
+            </td>
+            <td style={{ width: "60px", aspectRatio: "1/1" }}>
             </td>
           </tr>
         ))}

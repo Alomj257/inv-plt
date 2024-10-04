@@ -22,10 +22,10 @@ const DealListpop = ({ setIsNew,company, deals,userId }) => {
           />
         </div>
         <div className="">
-        <table className="table">
+        <table>
           <thead className="thead-dark">
             <tr>
-              <th scope="col text-uppercase "> </th>
+              <th scope="col text-uppercase " style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"> </th>
               <th scope="col text-uppercase "> DEAL NAME</th>
               <th scope="col text-uppercase ">ASSET ClASS </th>
               <th scope="col text-uppercase "> INVESTMENT DATE</th>
@@ -35,13 +35,14 @@ const DealListpop = ({ setIsNew,company, deals,userId }) => {
               <th scope="col text-uppercase ">NET MOIC</th>
               <th scope="col text-uppercase ">NET IRR </th>
               <th scope="col text-uppercase ">WEIGHT </th>
+              <th style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"></th>
             </tr>
           </thead>
           <tbody>
             {deals?.map((val, key) => (
               <tr key={key} className="p-3 " >
                 <td>
-                <div onClick={()=>navigate("about",{state:company?._id})} className=' ' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
+                <div onClick={()=>navigate("about",{state:company?._id})} className=' ms-3' style={{width:'50px',aspectRatio:"1/1"}}>  <img className='w-100 h-100 rounded-circle' src={Server+company?.profile||company?.img} alt="" /></div>
                 </td>
                 <td className="text-capitalize">{company?.name}</td>
                 <td>{company?.dealSummary?.asset}</td>
