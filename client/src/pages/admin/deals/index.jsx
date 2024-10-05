@@ -9,19 +9,43 @@ import { calculateIrrSingleInvestment } from '../../../utils/calculations/calcul
 import { getByIdCompanyService } from '../../../service/company/companyService';
 import { getUserByIdService } from '../../../service/auth/AuthService';
 import { netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal';
-import { MdOutlineModeEdit } from "react-icons/md";
+import { MdArrowDropUp, MdOutlineArrowDropDown, MdOutlineModeEdit } from "react-icons/md";
 const Deals = () => {
     const navigate=useNavigate();
     const [deals,setDeals]=useState([]);
-    const [company, setCompany]=useState([]);
-    useEffect(()=>{
-        const handle=async()=>{
-            const data=await getAllDealService();
-            setDeals(data);
-        }
-        handle();
-    },[]);
-
+   const [sort,setSort]=useState('desc');
+    useEffect(() => {
+      const handle = async () => {
+          const deals = await getAllDealService();
+          const dealsWithCompanyNames = await Promise.all(
+              deals.map(async (deal) => {
+                  const company = await getCompanyById(deal.companyId); 
+                  return { ...deal, companyName: company?.name,profile:company?.profile }; 
+              })
+          );
+         
+          setDeals(dealsWithCompanyNames);
+      };
+  
+      handle();
+  }, []);
+  
+  const getCompanyById = async (companyId) => {
+      return await getByIdCompanyService(companyId);
+  };
+  
+  const handleSortByCompanyName = () => {
+    setSort(pre=>pre=='asc'?'desc':'asc')
+    const sortedDeals = [...deals]?.sort((a, b) => {
+      if (sort === "asc") {
+        return a?.companyName?.localeCompare(b?.companyName);
+      } else if (sort === "desc") {
+        return b?.companyName?.localeCompare(a?.companyName);
+      }
+      return 0; 
+    });
+    setDeals(sortedDeals);
+  };
 
   return (
     <div>
@@ -29,7 +53,7 @@ const Deals = () => {
           <thead className="thead-dark">
             <tr>
               <th scope="col text-uppercase " style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"> </th>
-              <th scope="col text-uppercase "> COMPANY </th>
+              <th scope="col text-uppercase " onClick={()=>handleSortByCompanyName()}> COMPANY {(sort==='asc')? <MdArrowDropUp size={30} /> :<MdOutlineArrowDropDown size={30}/> }</th>
               <th scope="col text-uppercase ">Investor </th>
               <th scope="col text-uppercase "> INVESTMENT DATE</th>
               <th scope="col text-uppercase "> INVESTMENT</th>
@@ -44,7 +68,21 @@ const Deals = () => {
             {deals?.map((val, key) => (
              val?.investors?.map((v,i)=>(
              <tr key={key} className="p-3 " >
-               <GetCompany id={val?.companyId}/>
+               {/* <GetCompany id={val?.companyId}/> */}
+               <td>
+        <div
+          onClick={() => navigate("about", { state: val?.companyId })}
+          className=" ms-3"
+          style={{ width: "50px", aspectRatio: "1/1" }}
+        >
+          <img
+            className="w-100 h-100 rounded-circle"
+            src={Server + val?.profile || val?.img}
+            alt=""
+          />
+        </div>
+      </td>
+      <td className="text-capitalize">{val?.companyName}</td>
                <GetInvest deal={val} investor={v} investDate={val?.investedDate} currentValuation={val?.currentValue}/>
               </tr>
               )) 

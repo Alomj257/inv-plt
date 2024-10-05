@@ -108,7 +108,7 @@ const fieldData = [
 {/* investment */}
       <div className="h-50">
         <div className="my-3">
-            <div className="bg-dark py-3 px-5 rounded d-flex justify-content-between">
+            <div className="bg-dark py-3 px-4 rounded d-flex justify-content-between">
                 <h5 className="text-white mb-0 fw-bold">Investments</h5>
             </div>
         </div>
