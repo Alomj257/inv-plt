@@ -34,7 +34,7 @@ const Investments = ({userId}) => {
                   <th scope="col text-uppercase ">NET MOIC</th>
                   <th scope="col text-uppercase ">TOTAL INVESTMENT</th>
                   <th scope="col text-uppercase ">NET IRR </th>
-                  <th scope="col text-uppercase ">NUMBER OF INVESTMENTS </th>
+                  <th scope="col text-uppercase " className='text-end'>NUMBER OF INVESTMENTS </th>
                   <th style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"></th>
                 </tr>
               </thead>

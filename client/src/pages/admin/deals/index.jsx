@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import "./deals.scss";
 import { useNavigate } from 'react-router-dom';
-import { getAllDealService } from '../../../service/deal/dealService';
+import { getAllDealService, updateDealService } from '../../../service/deal/dealService';
 import NetProfit from '../../../components/customer/dealPop/profitCal';
 import { Server } from '../../../service/axios';
 import { currencyFormatter } from '../../../utils/formater/dateTimeFormater';
@@ -9,6 +9,7 @@ import { calculateIrrSingleInvestment } from '../../../utils/calculations/calcul
 import { getByIdCompanyService } from '../../../service/company/companyService';
 import { getUserByIdService } from '../../../service/auth/AuthService';
 import { netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal';
+import { MdOutlineModeEdit } from "react-icons/md";
 const Deals = () => {
     const navigate=useNavigate();
     const [deals,setDeals]=useState([]);
@@ -90,6 +91,8 @@ const GetCompany = ({ id }) => {
 const GetInvest = ({ deal, investor, investDate, currentValuation }) => {
     const [profit,setprofit]=useState(0);
     const [moic,setMoic]=useState(0);
+    const [shareholding,setShare]=useState(investor?.shareholding);
+    const [isEdit,setIsEdit]=useState(false);
     useEffect(()=>{
         const handle=async()=>{
             const paid = parseFloat(investor?.amount || 0) + parseFloat(investor?.fees || 0);
@@ -102,6 +105,28 @@ const GetInvest = ({ deal, investor, investDate, currentValuation }) => {
         }
         handle();
     },[deal, investor, investDate, currentValuation])
+
+    const editRef=useRef();
+
+    useEffect(() => {
+      const handle = (e) => {
+        if (editRef?.current && !editRef?.current.contains(e.target)) {
+          setIsEdit(false); 
+        }
+      };
+    
+      document.addEventListener("mousedown", handle);
+      return () => {
+        document.removeEventListener("mousedown", handle);
+      };
+    }, []);
+
+const handleChange=async(e)=>{
+  const {value}=e.target;
+  deal.investors.find(v=>v?.investerId===investor?.investerId&&v?.profit===investor?.profit).shareholding=parseFloat(value||0);
+  setShare(value)
+ await updateDealService(deal?._id,deal);
+}
 
   return (
     <>
@@ -119,7 +144,7 @@ const GetInvest = ({ deal, investor, investDate, currentValuation }) => {
           currentValue={currentValuation}
         />
       </td>
-      <td    style={{ width: "50px", aspectRatio: "1/1" }}>{investor?.shareholding}%</td>
+      <td    style={{ width: "60px", aspectRatio: "1/1" }}> <div className='d-flex field ' ref={editRef}> {!isEdit?<><div className='d-flex gap-3'><span>{shareholding}%</span> <MdOutlineModeEdit className='text-danger' onClick={()=>setIsEdit(true)} style={{cursor:"pointer"}} size={20}/>  </div></>  :<input type="text" className='input-field py-2 me-3' value={shareholding} onChange={handleChange} />}</div></td>
     </>
   );
 };
@@ -129,7 +154,6 @@ const InvestorName=({id})=>{
     useEffect(()=>{
         const handle=async()=>{
             const data=await getUserByIdService(id);
-            console.log(data,id)
             setuser(data);
         }
         if(id){
@@ -141,7 +165,6 @@ const InvestorName=({id})=>{
 }
 
 const IrrVal = ({ initialInvestment, investmentDate, currentValue }) => {
-    // console.log(initialInvestment, investmentDate, currentValue);
     const [irr, setirr] = useState(0);
     useEffect(() => {
       setirr(

@@ -66,7 +66,7 @@ try {
     return data;
 } catch (error) {
     console.log(error?.response?.data?.messsage);
-    showToast("error",error?.response?.data?.messsage);
+    // showToast("error",error?.response?.data?.messsage);
 }
 }
 

@@ -40,7 +40,7 @@ const Companies = () => {
           <th scope="col">CUMULATED INVESTMENT</th>
           <th scope="col">CURRENT VALUATION </th>
           <th scope="col"></th>
-          <td style={{ width: "60px", aspectRatio: "1/1" }} className='border-0'>
+          <td style={{ width: "50px", aspectRatio: "1/1" }} className='border-0'>
           </td>
         </tr>
       </thead>
@@ -72,7 +72,8 @@ const Companies = () => {
               </button>
               </div>
             </td>
-            <td style={{ width: "60px", aspectRatio: "1/1" }}>
+            <td style={{ width: "50px", aspectRatio: "1/1" }}>
+            
             </td>
           </tr>
         ))}

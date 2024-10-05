@@ -43,7 +43,7 @@ const CreateMamber = () => {
   return (
     <>
       {state && (
-        <div className="d-flex my-3 py-3  admin-header justify-content-between align-items-center">
+        <div className="d-flex my-3 py-2  admin-header justify-content-between align-items-center">
           <h5 className="text-capitalize m-0 fw-semibold">Personal Details</h5>
           <div className="right-profile  d-flex gap-4">
             {!isEdit && (
@@ -104,8 +104,8 @@ const CreateMamber = () => {
       {!paths?.includes("personal-add") && (
         <div className="h-50">
           <div className="my-3">
-            <div className="bg-dark py-4 px-5 rounded d-flex justify-content-between">
-              <h5 className="text-white">Investments</h5>
+            <div className="bg-dark py-3 px-5 rounded d-flex justify-content-between">
+              <h5 className="text-white mb-0 fw-bold">Investments</h5>
             </div>
           </div>
          <Investments userId={state}/>

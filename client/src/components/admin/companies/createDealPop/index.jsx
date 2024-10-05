@@ -85,7 +85,7 @@ const AddDealPop = ({ setIsNew, companyId,reFetch }) => {
 
   const handleDeal = async (e) => {
     e.preventDefault();
-   const newFields= fields?.map(val=>({...val,amount:parseInt(val?.amount||0)*rate,invest:parseInt(val?.amount||0),fees:parseFloat(val?.fees||0)*rate}));
+   const newFields= fields?.map((val,i)=>({...val, amount:parseInt(val?.amount||0)*rate,invest:parseInt(val?.amount||0),fees:parseFloat(val?.fees||0)*rate}));
     const newDeal = { ...deal,currency:currency?.currency, investors: newFields, companyId };
     let investDate;
     if(!company.dealSummary||!company.dealSummary.investDate){

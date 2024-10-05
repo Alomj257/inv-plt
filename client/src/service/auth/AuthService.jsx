@@ -69,7 +69,8 @@ export  const getUserByIdService=async(id)=>{
         }
         return data;
     } catch (error) {
-        showToast("error",error?.response?.data?.message);
+        console.log(error)
+        // showToast("error",error?.response?.data?.message);
     }
 }
 export  const getUserByEmailService=async(email)=>{

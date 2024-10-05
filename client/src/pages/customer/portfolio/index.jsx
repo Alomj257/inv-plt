@@ -108,8 +108,8 @@ const fieldData = [
 {/* investment */}
       <div className="h-50">
         <div className="my-3">
-            <div className="bg-dark py-4 px-5 rounded d-flex justify-content-between">
-                <h5 className="text-white">Investments</h5>
+            <div className="bg-dark py-3 px-5 rounded d-flex justify-content-between">
+                <h5 className="text-white mb-0 fw-bold">Investments</h5>
             </div>
         </div>
         <div className="bg-white h-50">
@@ -125,7 +125,7 @@ const fieldData = [
               <th scope="col ">NET MOIC</th>
               <th scope="col ">TOTAL INVESTMENT</th>
               <th scope="col ">NET IRR </th>
-              <th scope="col ">NUMBER OF INVESTMENTS </th>
+              <th scope="col " className='text-end'>NUMBER OF INVESTMENTS </th>
               <th style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"></th>
             </tr>
           </thead>
@@ -184,7 +184,7 @@ const Company = ({ companyId,list, index, deals,userId }) => {
         <td>{currencyFormatter(totalIvestMents)}</td>
         <td>{irr}</td>
         <td >
-          <div className='d-flex justify-content-center'>
+          <div className='d-flex justify-content-end'>
           <button onClick={() => setisDealList(true)} className="btn-dark d-flex justify-content-center gap-2 align-items-center">
             {deals && deals?.length} <div style={{width:"25px",aspectRatio:"1/1"}} className=' rounded-circle bg-dark-orange'> <IoIosArrowForward size={10} /></div>
           </button>

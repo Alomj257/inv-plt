@@ -1,7 +1,7 @@
 import { lazy } from "react";
-import Deals from "../pages/admin/deals";
 
 /* eslint-disable react-refresh/only-export-components */
+const  Deals = lazy(()=>import( "../pages/admin/deals"));
 const  AdminLayout = lazy(()=>import( "../pages/admin/adminLayout"));
 const  Dashboard = lazy(()=>import( "../pages/admin/dashboard"));
 const  CreateMamber = lazy(()=>import( "../pages/admin/members/createMamber"));

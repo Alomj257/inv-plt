@@ -58,7 +58,7 @@ const Profile = () => {
 
   return (
     <>
-    <div className="d-flex my-3 py-3  admin-header justify-content-between align-items-center">
+    <div className="d-flex my-3 py-2  admin-header justify-content-between align-items-center">
           <h5 className="text-capitalize m-0 fw-semibold">Personal Details</h5>
           <div className="right-profile  d-flex gap-4">
             {!isEdit && (

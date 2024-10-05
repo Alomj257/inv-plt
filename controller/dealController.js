@@ -16,7 +16,7 @@ exports.updateDeal=async(req,res)=>{
         if(!deal){
             return res.status(403).json({message:'Deal Id invalid '});
         }
-        await Deal.findByIdAndUpdate(req.params.id);
+        await Deal.findByIdAndUpdate(req.params.id,req.body,{new:true});
         res.status(200).json("Deal update Successfully");
     } catch (error) {
         console.log(error);
