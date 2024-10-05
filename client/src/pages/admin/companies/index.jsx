@@ -51,7 +51,7 @@ const Companies = () => {
            <div style={{ width: "60px", aspectRatio: "1/1",marginLeft:"20px" }} >   <img className="w-100 h-100 rounded-circle" src={ Server+val?.profile} alt="" /></div>
             </td>
             <td className='text-uppercase '>{val?.name}</td>
-            <Invest id={val?._id}/>
+            <Invest id={val?._id} />
             <td> {currencyFormatter(val?.dealSummary?.currentValuation) }</td>
             <td >
               <div className="d-flex gap-4">

@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import Deals from "../pages/admin/deals";
 
 /* eslint-disable react-refresh/only-export-components */
 const  AdminLayout = lazy(()=>import( "../pages/admin/adminLayout"));
@@ -30,6 +31,11 @@ export const routes = [
       {
         path: "member",
         element: <Dashboard role="admin" />,
+        needsAuth: true,
+      },
+      {
+        path: "deals",
+        element: <Deals role="admin" />,
         needsAuth: true,
       },
       {

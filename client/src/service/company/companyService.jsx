@@ -55,6 +55,7 @@ try {
 
 export const  getByIdCompanyService=async(id)=>{
 try {
+    console.log(id)
     if(!id){
         return;
     }

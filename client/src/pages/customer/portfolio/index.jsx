@@ -16,6 +16,7 @@ import { portfolioIrrParameter } from '../../../utils/calculationConversion'
 import { calculatePortfolioIrr } from '../../../utils/calculations/portfolioIrr'
 import NetProfit from '../../admin/members/createMamber/investments/values/netProfit'
 import { exchange, netMoic, netProfit } from '../../../utils/calculations/investorGrossTotal'
+import { IoIosArrowForward } from 'react-icons/io';
 
 const Portfolio = () => {
   const [company,setCompany]=useState([]);
@@ -51,9 +52,10 @@ const fieldData = [
           const investor = item?.investors?.find(v => v.investerId === userId);
           if (investor) {
             total+=1;
-          const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
+          const paid = parseFloat(investor?.amount || 0) + parseFloat(investor?.fees || 0);
           const carried = parseFloat(investor?.carried || 0);
           const shareholding = parseFloat(investor?.shareholding || 0);
+          console.log(paid)
           const profitResult = await netProfit(paid, shareholding, parseInt(item?.currentValue||0), item.currency, carried/100);
           const moicResult = await netMoic(paid, shareholding, parseInt(item?.currentValue||0), item.currency, carried/100);
           totalProfit += profitResult;
@@ -182,9 +184,9 @@ const Company = ({ companyId,list, index, deals,userId }) => {
         <td>{currencyFormatter(totalIvestMents)}</td>
         <td>{irr}</td>
         <td >
-          <div className='d-flex justify-content-end'>
-          <button onClick={() => setisDealList(true)} className="btn-red">
-            {deals && deals?.length} Investments
+          <div className='d-flex justify-content-center'>
+          <button onClick={() => setisDealList(true)} className="btn-dark d-flex justify-content-center gap-2 align-items-center">
+            {deals && deals?.length} <div style={{width:"25px",aspectRatio:"1/1"}} className=' rounded-circle bg-dark-orange'> <IoIosArrowForward size={10} /></div>
           </button>
           </div>
         </td>

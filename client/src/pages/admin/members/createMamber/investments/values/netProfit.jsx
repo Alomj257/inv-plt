@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getAllDealByInvestorService } from '../../../../../../service/deal/dealService';
 import {netProfit,netMoic} from "../../../../../../utils/calculations/investorGrossTotal";
+import { currencyFormatter } from '../../../../../../utils/formater/dateTimeFormater';
 
 const NetProfit = ({ deals, sector, currentValuation, userId }) => {
   const [profit, setProfit] = useState(0);
@@ -24,17 +25,16 @@ useEffect(() => {
     for (const item of deals) {
       const investor = item?.investors?.find(v => v.investerId === userId);
       if (investor) {
-        const paid = parseInt(investor?.amount || 0) + parseFloat(investor?.fees || 0);
+        const paid = parseFloat(investor?.amount || 0) + parseFloat(investor?.fees || 0);
         const carried = parseFloat(investor?.carried || 0);
         const shareholding = parseFloat(investor?.shareholding || 0);
-
         const profitResult = await netProfit(paid, shareholding, currentValuation, item.currency, carried/100);
         const moicResult = await netMoic(paid, shareholding, currentValuation, item.currency, carried/100);
         totalProfit += profitResult;
         totalMoic += moicResult;
       }
     }
-    setProfit(totalProfit);
+    setProfit(totalProfit.toFixed(2));
     setMoic(totalMoic);
   };
   getAllProfit().then(() => calculateProfitAndMoic());
@@ -44,7 +44,7 @@ useEffect(() => {
 
   return (
     <>
-      <td>{profit}</td>
+      <td>{currencyFormatter(profit)}</td>
       <td>{sector}</td>
       <td>{moic}</td>
     </>

@@ -26,7 +26,7 @@ const DealListpop = ({ setIsNew,company, deals,userId }) => {
           <thead className="thead-dark">
             <tr>
               <th scope="col text-uppercase " style={{ width: "60px", aspectRatio: "1/1" }}  className="border-0"> </th>
-              <th scope="col text-uppercase "> DEAL NAME</th>
+              <th scope="col text-uppercase "> COMPANY NAME</th>
               <th scope="col text-uppercase ">ASSET ClASS </th>
               <th scope="col text-uppercase "> INVESTMENT DATE</th>
               <th scope="col text-uppercase "> INVESTMENT</th>
@@ -50,7 +50,7 @@ const DealListpop = ({ setIsNew,company, deals,userId }) => {
                 <td> {currencyFormatter(val?.investors&&val?.investors?.find(v=>v.investerId===user?._id)?.amount||val?.investors&&val?.investors?.find(v=>v.investerId===userId)?.amount)}</td>
                 <NetProfit deal={val} currentValuation={company?.dealSummary?.currentValuation} userId={userId||user?._id} sector={company?.dealSummary?.sector}/>
                 <td><IrrVal initialInvestment={val?.investors&&val?.investors?.find(v=>v.investerId===(userId||user?._id))?.amount} investmentDate={val?.investedDate}  currentValue={val?.currentValue}/></td>
-                <td>{val?.weight}</td>
+                <td>{val?.investors&&val?.investors?.find(v=>v.investerId===userId)?.shareholding}%</td>
               </tr>
             ))}
           </tbody>

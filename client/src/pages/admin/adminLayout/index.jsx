@@ -4,7 +4,7 @@ import Sidebar from '../../../common/sidebar'
 import Header from '../../../common/header'
 import {  Outlet, useNavigate } from 'react-router-dom'
 import {  MdHome } from 'react-icons/md'
-import { FaBriefcase } from 'react-icons/fa'
+import { FaBriefcase, FaHotjar } from 'react-icons/fa'
 import { getAuth } from '../../../utils/authenticationHelper'
 import { getUserByIdService } from '../../../service/auth/AuthService'
 
@@ -49,5 +49,10 @@ const sidebarData=[
     icon: <FaBriefcase /> ,
     name: "Companies",
     path: "companies",
+  },
+  {
+    icon:  <FaHotjar /> ,
+    name: "Deals",
+    path: "deals",
   },
 ]

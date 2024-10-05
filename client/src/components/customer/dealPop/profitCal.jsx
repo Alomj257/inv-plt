@@ -26,14 +26,11 @@ const NetProfit = ({ deal, sector, currentValuation, userId }) => {
       
       if (investor) {
         const paid = parseFloat(investor?.amount || 0) + parseFloat(investor?.fees || 0);
-        const carried = parseFloat(investor?.carried || 0) / 100; // Converting to percentage
+        const carried = parseFloat(investor?.carried || 0); 
         const shareholding = parseFloat(investor?.shareholding || 0);
-
-        // Ensure the calculation functions are awaited
-        const profitResult = await netProfit(paid, shareholding, currentValuation, deal.currency, carried);
-        const moicResult = await netMoic(paid, shareholding, currentValuation, deal.currency, carried);
-
-        setProfit(profitResult);
+        const profitResult = await netProfit(paid, shareholding, currentValuation, deal.currency, carried/100);
+        const moicResult = await netMoic(paid, shareholding, currentValuation, deal.currency, carried/100);
+        setProfit(profitResult.toFixed(2));
         setMoic(moicResult);
       }
     };

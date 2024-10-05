@@ -8,14 +8,9 @@ export const netProfit = async(
   carried
 ) => {
   const rate=await exchange(currency);
-  console.log(paid,
-    shareholding,
-    currentValuation,
-    currency,
-    carried)
   const profit = (shareholding * parseInt(currentValuation||0) * rate/100)-paid ;
   if (profit > 0) return profit;
-  return profit * (1 - carried);
+  return (profit * (1 - carried));
 };
 
 export const netMoic =async (

@@ -10,7 +10,7 @@
 
   const irr = (currentValue / initialInvestment) ** (1 / timeInYears) - 1;
 
-  return (irr * 100).toFixed(4);
+  return (irr * 100).toPrecision(2);
 }
 
 // // Example usage for a single investment

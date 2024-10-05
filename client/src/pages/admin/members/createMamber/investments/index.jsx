@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import "../createMamber.scss"
 import { getAllDealByUserAndCompanyService } from '../../../../../service/deal/dealService';
 import { getByIdCompanyService } from '../../../../../service/company/companyService';
-import { getAuth } from '../../../../../utils/authenticationHelper';
 import { portfolioIrrParameter } from '../../../../../utils/calculationConversion';
 import { calculatePortfolioIrr } from '../../../../../utils/calculations/portfolioIrr';
 import DealListpop from '../../../../../components/customer/dealPop';
 import { Server } from '../../../../../service/axios';
+import { IoIosArrowForward } from "react-icons/io";
 import { currencyFormatter } from '../../../../../utils/formater/dateTimeFormater';
 import NetProfit from './values/netProfit';
 
@@ -61,7 +62,6 @@ const Company = ({ companyId,list, index, deals,userId }) => {
   const [irr,setIrr]=useState(0);
 
   useEffect(() => {
-  
     const getCompanyById = async () => {
       const data = await getByIdCompanyService(companyId);
       setCompany(data);
@@ -96,8 +96,8 @@ const Company = ({ companyId,list, index, deals,userId }) => {
         <td>{irr}</td>
         <td className='text-end'>
           <div className="d-flex justify-content-end">
-          <button onClick={() => setisDealList(true)} className="btn-red">
-            {deals && deals?.length} Investments
+          <button onClick={() => setisDealList(true)} className="btn-dark d-flex justify-content-center gap-2 align-items-center">
+            {deals && deals?.length} <div style={{width:"25px",aspectRatio:"1/1"}} className=' rounded-circle bg-dark-orange'> <IoIosArrowForward size={10} /></div>
           </button>
           </div>
         </td>
